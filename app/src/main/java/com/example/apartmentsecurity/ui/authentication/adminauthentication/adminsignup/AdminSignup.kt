@@ -11,8 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,21 +28,49 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.apartmentsecurity.ui.theme.onTertiaryContainerDark
+import com.example.apartmentsecurity.ui.theme.onTertiaryContainerLight
+import kotlin.reflect.KFunction1
 
 @Composable
-fun AdminSignup(modifier: Modifier = Modifier) {
+fun AdminSignup() {
     Scaffold(
-        topBar = {AdminSignUpTopBar()}
+        topBar = {AdminSignUpTopBar(
+            onBackClick = {}
+        )}
     ) { paddingValues ->
+
+        val viewModel: AdminSignupViewModel = hiltViewModel()
+
+        val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(
+            key1 = uiState.email,
+            key2 = uiState.password,
+            key3 = uiState.confirmPassword
+        ) {
+            viewModel.validateForm()
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -50,7 +82,10 @@ fun AdminSignup(modifier: Modifier = Modifier) {
                 text = "ADMIN SIGNUP", size = 40.sp
             )
 
-            SignupFormSection()
+            SignupFormSection(
+                state = uiState,
+                onEvent = viewModel::onEvent
+            )
 
             SubmitButton()
 
@@ -63,11 +98,13 @@ fun AdminSignup(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminSignUpTopBar(modifier: Modifier = Modifier) {
+fun AdminSignUpTopBar(
+    onBackClick: () -> Unit
+) {
     TopAppBar(
         title = {},
         navigationIcon = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = onBackClick) {
                 Icon(
                     modifier = Modifier.size(50.dp),
                     imageVector = Icons.Default.Close,
@@ -79,7 +116,7 @@ fun AdminSignUpTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SubmitButton(modifier: Modifier = Modifier) {
+fun SubmitButton() {
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = { },
@@ -95,7 +132,7 @@ fun SubmitButton(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TextClickable(modifier: Modifier = Modifier) {
+fun TextClickable() {
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
     ) {
@@ -103,12 +140,12 @@ fun TextClickable(modifier: Modifier = Modifier) {
         Text(text = "Already have Account? ")
         Text(modifier = Modifier
             .drawBehind {
-                    drawLine(
-                        color = if(!darkThemeOrNot) Color(0xFF5A3D00) else Color(0xFFFFDEAB),
-                        start = Offset(x = 0f , y = size.height * 0.8f ),
-                        end = Offset(x = size.width , y = size.height * 0.8f  ),
-                        strokeWidth = 2.dp.toPx()
-                    )
+                drawLine(
+                    color = if (!darkThemeOrNot) onTertiaryContainerLight else onTertiaryContainerDark,
+                    start = Offset(x = 0f, y = size.height * 0.8f),
+                    end = Offset(x = size.width, y = size.height * 0.8f),
+                    strokeWidth = 2.dp.toPx()
+                )
             }
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -123,32 +160,54 @@ fun TextClickable(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SignupFormSection(modifier: Modifier = Modifier) {
+fun SignupFormSection(
+    state: AdminSignupData,
+    onEvent: KFunction1<AdminSignupEvent, Unit>
+) {
     Column {
         TwoInputSection(
             modifier = Modifier.fillMaxWidth(),
+            firstName = state.firstName,
+            lastName = state.lastName,
+            onFirstNameChange = onEvent,
+            onLastNameChange =onEvent,
             supportingText1 = "FIRST NAME",
             supportingText2 = "LAST NAME"
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
+            value = state.email,
+            onValueChange = {onEvent(AdminSignupEvent.OnEmailChange(it))},
             supportingText = "EMAIL ADDRESS"
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
+            value = state.apartmentName,
+            onValueChange = {onEvent(AdminSignupEvent.OnApartmentNameChange(it))},
             supportingText = "APARTMENT NAME"
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
+            value = state.userName,
+            onValueChange = {onEvent(AdminSignupEvent.OnUserNameChange(it))},
             supportingText = "USERNAME"
         )
-        SingleInputSection(
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = "PASSWORD"
+        PasswordSection(
+            value = state.password,
+            isVisible = state.isPasswordVisible,
+            onValueChange = { onEvent(AdminSignupEvent.OnPasswordChange(it)) },
+            onEyeButtonClick = { onEvent(AdminSignupEvent.OnPasswordVisibilityChange(it))},
+            supportingText = "PASSWORD",
+            next = ImeAction.Next
         )
-        SingleInputSection(
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = "CONFIRM PASSWORD"
+        PasswordSection(
+            value = state.confirmPassword ,
+            isVisible = state.isConfirmPasswordVisible,
+            onValueChange = { onEvent(AdminSignupEvent.OnConfirmPasswordChange(it))},
+            onEyeButtonClick = {onEvent(AdminSignupEvent.OnConfirmPasswordVisibilityChange(it))},
+            supportingText = "CONFIRM PASSWORD",
+            shape = RoundedCornerShape(bottomStart = 25.dp , bottomEnd = 25.dp),
+            next = ImeAction.Done
         )
     }
 
@@ -156,26 +215,86 @@ fun SignupFormSection(modifier: Modifier = Modifier) {
 
 
 @Composable
+fun PasswordSection(
+    modifier : Modifier = Modifier,
+    value: String,
+    isVisible: Boolean,
+    onValueChange: (String) -> Unit,
+    onEyeButtonClick: (Boolean) -> Unit,
+    supportingText: String,
+    shape: Shape = RectangleShape,
+    next: ImeAction,
+    ) {
+
+    OutlinedTextField(
+        modifier = modifier.fillMaxWidth(),
+        value = value,
+        onValueChange = { onValueChange(it) },
+        shape = shape ,
+        placeholder = { Text(text = supportingText, style = MaterialTheme.typography.titleMedium) },
+        maxLines = 1,
+        visualTransformation = if (!isVisible) PasswordVisualTransformation(mask = '*') else VisualTransformation.None,
+        suffix = {
+            IconButton(
+                modifier = Modifier
+                    .size(20.dp),
+                onClick = { onEyeButtonClick(isVisible) }
+            ) {
+                Icon(
+                    imageVector = if (isVisible)Icons.Rounded.Visibility else Icons.Rounded.VisibilityOff,
+                    contentDescription = null
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = next
+        )
+    )
+}
+
+@Composable
 fun SingleInputSection(
-    modifier: Modifier = Modifier, supportingText: String
+    modifier: Modifier = Modifier,
+    value : String,
+    onValueChange: (String) -> Unit,
+    supportingText: String,
+    shape: Shape = RectangleShape
 ) {
     InputText(
-        modifier = modifier, supportingText = supportingText
+        modifier = modifier,
+        value = value,
+        onValueChange = { onValueChange(it) },
+        supportingText = supportingText,
+        shape = shape,
     )
 }
 
 @Composable
 fun TwoInputSection(
-    modifier: Modifier = Modifier, supportingText1: String, supportingText2: String
+    modifier: Modifier = Modifier,
+    firstName: String,
+    lastName: String,
+    onFirstNameChange: KFunction1<AdminSignupEvent, Unit>,
+    onLastNameChange: KFunction1<AdminSignupEvent, Unit>,
+    supportingText1: String,
+    supportingText2: String
 ) {
     Row(
         modifier = modifier
     ) {
         InputText(
-            modifier = Modifier.weight(0.5f), supportingText = supportingText1
+            modifier = Modifier.weight(0.5f),
+            value = firstName,
+            onValueChange = { onFirstNameChange(AdminSignupEvent.OnFirstNameChange(it)) },
+            supportingText = supportingText1,
+            shape = RoundedCornerShape(topStart = 25.dp)
         )
         InputText(
-            modifier = Modifier.weight(0.5f), supportingText = supportingText2
+            modifier = Modifier.weight(0.5f),
+            value = lastName,
+            onValueChange = { onLastNameChange(AdminSignupEvent.OnLastNameChange(it)) },
+            supportingText = supportingText2,
+            shape = RoundedCornerShape(topEnd = 25.dp)
         )
     }
 }
@@ -183,15 +302,24 @@ fun TwoInputSection(
 
 @Composable
 fun InputText(
-    modifier: Modifier = Modifier, supportingText: String
+    modifier: Modifier = Modifier,
+    value : String,
+    onValueChange : (String) -> Unit,
+    supportingText: String,
+    shape: Shape = RectangleShape
 ) {
     OutlinedTextField(modifier = modifier,
-        value = "",
-        onValueChange = {},
-        shape = RectangleShape,
-        placeholder = { Text(text = supportingText, style = MaterialTheme.typography.titleMedium) })
-}
+        value = value,
+        onValueChange = { onValueChange(it) },
+        shape = shape,
+        placeholder = { Text(text = supportingText, style = MaterialTheme.typography.titleMedium) },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next
+        )
+    )
 
+}
 @Composable
 fun TopTitleAdminSignUp(
     text: String, size: TextUnit
