@@ -30,7 +30,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -39,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
@@ -63,12 +61,11 @@ fun AdminSignup() {
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
+        viewModel.onErrorChange()
         LaunchedEffect(
-            key1 = uiState.email,
-            key2 = uiState.password,
-            key3 = uiState.confirmPassword
+            key1 = Unit
         ) {
-            viewModel.validateForm()
+            viewModel.onErrorChange()
         }
 
         Column(
@@ -84,13 +81,14 @@ fun AdminSignup() {
 
             SignupFormSection(
                 state = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
             )
 
-            SubmitButton()
+            SubmitButton(
+                onSubmitClick = viewModel::onEvent
+            )
 
             TextClickable()
-
 
         }
     }
@@ -116,12 +114,14 @@ fun AdminSignUpTopBar(
 }
 
 @Composable
-fun SubmitButton() {
+fun SubmitButton(
+    onSubmitClick: KFunction1<AdminSignupEvent, Unit>
+) {
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { },
+        onClick = { onSubmitClick(AdminSignupEvent.OnSubmitClick) },
         border = BorderStroke(1.dp, color = ButtonDefaults.outlinedButtonColors().contentColor),
-        shape = RectangleShape,
+        shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
             contentColor = ButtonDefaults.outlinedButtonColors().contentColor
@@ -138,23 +138,25 @@ fun TextClickable() {
     ) {
         val darkThemeOrNot = isSystemInDarkTheme()
         Text(text = "Already have Account? ")
-        Text(modifier = Modifier
-            .drawBehind {
-                drawLine(
-                    color = if (!darkThemeOrNot) onTertiaryContainerLight else onTertiaryContainerDark,
-                    start = Offset(x = 0f, y = size.height * 0.8f),
-                    end = Offset(x = size.width, y = size.height * 0.8f),
-                    strokeWidth = 2.dp.toPx()
-                )
-            }
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) {
+        Text(
+            modifier = Modifier
+                .drawBehind {
+                    drawLine(
+                        color = if (!darkThemeOrNot) onTertiaryContainerLight else onTertiaryContainerDark,
+                        start = Offset(x = 0f, y = size.height * 0.8f),
+                        end = Offset(x = size.width, y = size.height * 0.8f),
+                        strokeWidth = 2.dp.toPx()
+                    )
+                }
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
 
-            }, text = "Log In" ,
+                },
+            text = "Log In",
 
-        )
+            )
     }
 
 }
@@ -178,7 +180,9 @@ fun SignupFormSection(
             modifier = Modifier.fillMaxWidth(),
             value = state.email,
             onValueChange = {onEvent(AdminSignupEvent.OnEmailChange(it))},
-            supportingText = "EMAIL ADDRESS"
+            supportingText = "EMAIL ADDRESS",
+            isError = state.emailError
+
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
@@ -198,7 +202,8 @@ fun SignupFormSection(
             onValueChange = { onEvent(AdminSignupEvent.OnPasswordChange(it)) },
             onEyeButtonClick = { onEvent(AdminSignupEvent.OnPasswordVisibilityChange(it))},
             supportingText = "PASSWORD",
-            next = ImeAction.Next
+            next = ImeAction.Next,
+            isError = state.passwordError
         )
         PasswordSection(
             value = state.confirmPassword ,
@@ -207,7 +212,8 @@ fun SignupFormSection(
             onEyeButtonClick = {onEvent(AdminSignupEvent.OnConfirmPasswordVisibilityChange(it))},
             supportingText = "CONFIRM PASSWORD",
             shape = RoundedCornerShape(bottomStart = 25.dp , bottomEnd = 25.dp),
-            next = ImeAction.Done
+            next = ImeAction.Done,
+            isError = state.passwordError
         )
     }
 
@@ -224,6 +230,7 @@ fun PasswordSection(
     supportingText: String,
     shape: Shape = RectangleShape,
     next: ImeAction,
+    isError : Boolean
     ) {
 
     OutlinedTextField(
@@ -248,7 +255,8 @@ fun PasswordSection(
         },
         keyboardOptions = KeyboardOptions(
             imeAction = next
-        )
+        ),
+        isError = isError
     )
 }
 
@@ -258,7 +266,8 @@ fun SingleInputSection(
     value : String,
     onValueChange: (String) -> Unit,
     supportingText: String,
-    shape: Shape = RectangleShape
+    shape: Shape = RectangleShape,
+    isError: Boolean = false
 ) {
     InputText(
         modifier = modifier,
@@ -266,6 +275,7 @@ fun SingleInputSection(
         onValueChange = { onValueChange(it) },
         supportingText = supportingText,
         shape = shape,
+        isError = isError
     )
 }
 
@@ -306,7 +316,8 @@ fun InputText(
     value : String,
     onValueChange : (String) -> Unit,
     supportingText: String,
-    shape: Shape = RectangleShape
+    shape: Shape = RectangleShape,
+    isError: Boolean = false,
 ) {
     OutlinedTextField(modifier = modifier,
         value = value,
@@ -316,7 +327,8 @@ fun InputText(
         maxLines = 1,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next
-        )
+        ),
+        isError = isError
     )
 
 }

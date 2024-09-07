@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.apartmentsecurity.util.SnackBarController
+import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,6 +28,8 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         initialValue = AdminSignupData()
     )
 
+    private var _authenticationState = MutableStateFlow<AuthState>(AuthState.Loading)
+
 
 
     fun onEvent(event: AdminSignupEvent) {
@@ -37,8 +42,41 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
             is AdminSignupEvent.OnPasswordChange -> onPasswordChange(event.password)
             is AdminSignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
             is AdminSignupEvent.OnPasswordVisibilityChange -> onPasswordVisibleChange(event.isPasswordVisible)
-            is AdminSignupEvent.OnConfirmPasswordVisibilityChange -> onConfirmPasswordVisibleChange(
-                event.isConfirmPasswordVisible
+            is AdminSignupEvent.OnConfirmPasswordVisibilityChange -> onConfirmPasswordVisibleChange(event.isConfirmPasswordVisible)
+            AdminSignupEvent.OnSubmitClick -> onSubmitButtonClick()
+            AdminSignupEvent.OnErrorChange -> onErrorChange()
+        }
+    }
+
+    fun onErrorChange() {
+        viewModelScope.launch {
+            _state.update {state ->
+                state.copy(
+                    emailError = !validateEmail(),
+                    passwordError = !validatePassword()
+                )
+            }
+            Log.d("CheckingError" , validatePassword().toString() + validateEmail().toString())
+        }
+    }
+
+    private fun onSubmitButtonClick() {
+        _authenticationState.value = AuthState.Loading
+        viewModelScope.launch {
+            SnackBarController.sendEvent(
+                event = SnackBarEvent(
+                    message =
+                    if(state.value.emailError && state.value.passwordError)
+                        "${state.value.errorMessageEmail}\n${state.value.errorMessagePassword}"
+                    else if (state.value.emailError)
+                        state.value.errorMessageEmail
+                    else if (state.value.passwordError)
+                        state.value.errorMessagePassword
+                    else {
+                        _authenticationState.value = AuthState.Authentication
+                        "SignUp SuccessFully"
+                    }
+                )
             )
         }
     }
@@ -176,10 +214,7 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    val emailError = mutableStateOf<String?>(null)
-    val passwordError = mutableStateOf<String?>(null)
 
-    // Combined validation logic
     private fun String.validateEmail() = when {
         isEmpty() -> ValidationResult.EMPTY_EMAIL
         !Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+").matcher(this).matches() -> ValidationResult.INVALID_EMAIL
@@ -196,17 +231,39 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         else -> ValidationResult.VALID
     }
 
-    // Main validation function
-    fun validateForm(): Boolean {
-        emailError.value = state.value.email.validateEmail().message
-        passwordError.value =  state.value.password.validatePassword().message
-        return emailError.value == null && passwordError.value == null
+    private fun validateEmail() : Boolean{
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    errorMessageEmail = state.email.validateEmail().message.toString()
+                )
+            }
+        }
+        return state.value.errorMessageEmail == ""
+    }
+
+    private fun validatePassword() : Boolean {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    errorMessagePassword = state.password.validatePassword().message.toString()
+                )
+            }
+        }
+        return state.value.errorMessagePassword == ""
     }
 
 }
 
+sealed class AuthState{
+    data object Loading : AuthState()
+    data object Authentication : AuthState()
+    data object UnAuthentication : AuthState()
+    data class Message(val message : String) : AuthState()
+}
+
 enum class ValidationResult(val message: String?) {
-    VALID(null),
+    VALID(""),
     EMPTY_EMAIL("Email cannot be empty"),
     INVALID_EMAIL("Invalid email format"),
     EMPTY_PASSWORD("Password cannot be empty"),

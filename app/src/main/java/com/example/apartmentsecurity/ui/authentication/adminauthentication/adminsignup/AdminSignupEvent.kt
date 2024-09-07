@@ -19,4 +19,8 @@ sealed class AdminSignupEvent {
 
     data class OnConfirmPasswordVisibilityChange(val isConfirmPasswordVisible : Boolean ) : AdminSignupEvent()
 
+    data object OnErrorChange : AdminSignupEvent()
+
+    data object OnSubmitClick : AdminSignupEvent()
+
 }
