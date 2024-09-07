@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "276115967327",
+    "project_id": "apartmentsecurity-19262",
+    "storage_bucket": "apartmentsecurity-19262.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276115967327:android:468200818f78a1ee317aea",
+        "android_client_info": {
+          "package_name": "com.example.apartmentsecurity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2cb5xqqQwveIyiYxFAnrUlC0DLETO4h8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,10 +2,8 @@ package com.example.apartmentsecurity.ui.authentication.adminauthentication.admi
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
