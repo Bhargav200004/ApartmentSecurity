@@ -62,11 +62,7 @@ fun AdminSignup() {
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
         viewModel.onErrorChange()
-        LaunchedEffect(
-            key1 = Unit
-        ) {
-            viewModel.onErrorChange()
-        }
+
 
         Column(
             modifier = Modifier
@@ -75,6 +71,7 @@ fun AdminSignup() {
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceAround,
         ) {
+
             TopTitleAdminSignUp(
                 text = "ADMIN SIGNUP", size = 40.sp
             )

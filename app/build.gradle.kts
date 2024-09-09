@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.service)
 }
 
 
@@ -86,7 +87,8 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     //firebase
-
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
 
 
 

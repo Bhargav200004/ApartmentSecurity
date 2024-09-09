@@ -14,5 +14,5 @@ data class AdminSignupData(
     val isPasswordVisible : Boolean = false,
     val isConfirmPasswordVisible : Boolean = false,
     val errorMessageEmail: String = "",
-    val errorMessagePassword : String = ""
+    val errorMessagePassword : String = "",
 )

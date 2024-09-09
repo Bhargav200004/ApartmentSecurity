@@ -4,6 +4,8 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
+import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +19,10 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminSignupViewModel @Inject constructor() : ViewModel() {
+class AdminSignupViewModel @Inject constructor(
+    private val authRepository : FirebaseAuthenticatorImpl,
+    private val firebaseFireStore: FirebaseFireStoreImpl
+) : ViewModel() {
 
     private var _state = MutableStateFlow(AdminSignupData())
     val state = _state.asStateFlow().stateIn(
@@ -25,8 +30,6 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
         initialValue = AdminSignupData()
     )
-
-    private var _authenticationState = MutableStateFlow<AuthState>(AuthState.Loading)
 
 
 
@@ -54,24 +57,26 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
                     passwordError = !validatePassword()
                 )
             }
-            Log.d("CheckingError" , validatePassword().toString() + validateEmail().toString())
         }
     }
 
     private fun onSubmitButtonClick() {
-        _authenticationState.value = AuthState.Loading
         viewModelScope.launch {
             SnackBarController.sendEvent(
                 event = SnackBarEvent(
                     message =
-                    if(state.value.emailError && state.value.passwordError)
+                    if(state.value.emailError && state.value.passwordError){
+                        createDatabase()
                         "${state.value.errorMessageEmail}\n${state.value.errorMessagePassword}"
+                    }
                     else if (state.value.emailError)
                         state.value.errorMessageEmail
                     else if (state.value.passwordError)
                         state.value.errorMessagePassword
                     else {
-                        _authenticationState.value = AuthState.Authentication
+
+//                        signUpWithEmailPassword()
+
                         "SignUp SuccessFully"
                     }
                 )
@@ -79,6 +84,35 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun createDatabase(){
+        viewModelScope.launch {
+            try {
+                if (authRepository.getUser()?.uid != null){
+                    val user = authRepository.getUser()!!.uid
+                    val apartmentName = state.value.apartmentName
+                    firebaseFireStore.create(authRepository.getUser()!!.uid , state.value.apartmentName)
+                    Log.d("Checkingerror" , "user are registered number $user , $apartmentName")
+                }
+                else{
+                    Log.d("Checkingerror" , "user are not registered number")
+                }
+
+            }catch (e : Exception){
+                Log.e("Checkingerror" , e.message.toString())
+            }
+        }
+    }
+
+    private fun signUpWithEmailPassword() {
+        viewModelScope.launch {
+            try {
+                authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
+            }
+            catch (e : Exception){
+            }
+        }
+    }
+    
     private fun onPasswordVisibleChange(passwordVisible: Boolean) {
         try {
             viewModelScope.launch {
@@ -251,13 +285,7 @@ class AdminSignupViewModel @Inject constructor() : ViewModel() {
         return state.value.errorMessagePassword == ""
     }
 
-}
 
-sealed class AuthState{
-    data object Loading : AuthState()
-    data object Authentication : AuthState()
-    data object UnAuthentication : AuthState()
-    data class Message(val message : String) : AuthState()
 }
 
 enum class ValidationResult(val message: String?) {

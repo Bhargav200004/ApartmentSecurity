@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+firebaseBom = "33.2.0"
 hiltAndroidCompiler = "2.48.1"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
@@ -15,11 +16,16 @@ navigationCompose = "2.8.0"
 kspVersion = "2.0.20-1.0.25"
 hiltVersion = "2.49"
 hiltCompiler = "1.2.0"
+googleSeviceVersion = "4.4.2"
 
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-analytics = { group = "com.google.firebase" , name = "firebase-analytics" }
+firebase-auth = { group = "com.google.firebase" , name = "firebase-auth" }
+firebase-bom = { group = "com.google.firebase" , name="firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { group = "com.google.firebase"  , name = "firebase-firestore"}
 hilt-android = { group = "com.google.dagger",name="hilt-android" , version.ref = "hiltVersion" }
 hilt-android-compiler = { group = "com.google.dagger",name ="hilt-android-compiler" , version.ref = "hiltAndroidCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -43,9 +49,16 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
 androidx-material-icons-extended = {  group = "androidx.compose.material", name = "material-icons-extended"}
 
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp" ,  version.ref = "kspVersion"}
 hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "hiltVersion"}
+google-service = {id = "com.google.gms.google-services" , version.ref = "googleSeviceVersion"}
+
+
+[bundles]
+firebase = [ "firebase-analytics" , "firebase-auth" , 'firebase-firestore']
