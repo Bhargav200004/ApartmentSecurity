@@ -1,5 +1,6 @@
 package com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -63,6 +66,9 @@ fun AdminSignup() {
 
         viewModel.onErrorChange()
 
+        LaunchedEffect(true) {
+
+        }
 
         Column(
             modifier = Modifier
@@ -71,22 +77,23 @@ fun AdminSignup() {
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceAround,
         ) {
+            if (uiState.circularProgressionBarShow){
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }else{
+                TopTitleAdminSignUp(
+                    text = "ADMIN SIGNUP", size = 40.sp
+                )
 
-            TopTitleAdminSignUp(
-                text = "ADMIN SIGNUP", size = 40.sp
-            )
+                SignupFormSection(
+                    state = uiState,
+                    onEvent = viewModel::onEvent,
+                )
 
-            SignupFormSection(
-                state = uiState,
-                onEvent = viewModel::onEvent,
-            )
-
-            SubmitButton(
-                onSubmitClick = viewModel::onEvent
-            )
-
-            TextClickable()
-
+                SubmitButton(
+                    onSubmitClick = viewModel::onEvent
+                )
+                TextClickable()
+            }
         }
     }
 }

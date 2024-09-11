@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
 import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
+import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,7 +68,7 @@ class AdminSignupViewModel @Inject constructor(
                 event = SnackBarEvent(
                     message =
                     if(state.value.emailError && state.value.passwordError){
-                        createDatabase()
+
                         "${state.value.errorMessageEmail}\n${state.value.errorMessagePassword}"
                     }
                     else if (state.value.emailError)
@@ -74,9 +76,11 @@ class AdminSignupViewModel @Inject constructor(
                     else if (state.value.passwordError)
                         state.value.errorMessagePassword
                     else {
-
-//                        signUpWithEmailPassword()
-
+                        circularProgressBarShow(show = true)
+                        signUpWithEmailPassword()
+                        delay(4000)
+                        createDatabase()
+                        circularProgressBarShow(show = false)
                         "SignUp SuccessFully"
                     }
                 )
@@ -84,13 +88,24 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
+
+
     private fun createDatabase(){
         viewModelScope.launch {
             try {
-                if (authRepository.getUser()?.uid != null){
+                val adminData = AdminData(
+                    fName = state.value.firstName,
+                    lName = state.value.lastName,
+                    userName = state.value.userName
+                )
+                if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid
                     val apartmentName = state.value.apartmentName
-                    firebaseFireStore.create(authRepository.getUser()!!.uid , state.value.apartmentName)
+                    firebaseFireStore.create(
+                        collection = state.value.user?.user?.uid!!,
+                        document = state.value.apartmentName,
+                        adminData = adminData
+                    )
                     Log.d("Checkingerror" , "user are registered number $user , $apartmentName")
                 }
                 else{
@@ -106,9 +121,16 @@ class AdminSignupViewModel @Inject constructor(
     private fun signUpWithEmailPassword() {
         viewModelScope.launch {
             try {
-                authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
+                val result = authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
+                _state.update {state ->
+                    state.copy(
+                        user = result
+                    )
+                }
+
             }
             catch (e : Exception){
+                Log.e("errorMessage" , "${e.message}" )
             }
         }
     }
@@ -245,6 +267,18 @@ class AdminSignupViewModel @Inject constructor(
             Log.e(TAG, "${e.message}")
         }
     }
+
+
+    private fun circularProgressBarShow(show : Boolean) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    circularProgressionBarShow = show
+                )
+            }
+        }
+    }
+
 
 
     private fun String.validateEmail() = when {
