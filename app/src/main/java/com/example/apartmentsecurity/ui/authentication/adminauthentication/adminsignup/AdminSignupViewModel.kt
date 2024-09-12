@@ -34,7 +34,6 @@ class AdminSignupViewModel @Inject constructor(
     )
 
 
-
     fun onEvent(event: AdminSignupEvent) {
         when (event) {
             is AdminSignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)

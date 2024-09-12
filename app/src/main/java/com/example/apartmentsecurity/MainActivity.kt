@@ -15,7 +15,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup.AdminSignup
+import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSignin
 import com.example.apartmentsecurity.ui.theme.ApartmentSecurityTheme
 import com.example.apartmentsecurity.util.ObserverAsEvents
 import com.example.apartmentsecurity.util.SnackBarController
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(paddingValues = innerPadding)
                     ) {
-                        AdminSignup()
+                        AdminSignin()
                     }
                 }
             }
