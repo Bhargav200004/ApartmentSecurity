@@ -58,9 +58,6 @@ fun AdminSignup() {
 
         viewModel.onErrorChange()
 
-        LaunchedEffect(true) {
-
-        }
 
         Column(
             modifier = Modifier

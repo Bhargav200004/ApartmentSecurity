@@ -317,8 +317,6 @@ class AdminSignupViewModel @Inject constructor(
         }
         return state.value.errorMessagePassword == ""
     }
-
-
 }
 
 enum class ValidationResult(val message: String?) {
