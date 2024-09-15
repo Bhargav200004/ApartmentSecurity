@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun InputText(
@@ -18,6 +19,7 @@ fun InputText(
     supportingText: String,
     shape: Shape = RectangleShape,
     isError: Boolean = false,
+    keyboardType : KeyboardType = KeyboardType.Text
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -27,7 +29,8 @@ fun InputText(
         placeholder = { Text(text = supportingText, style = MaterialTheme.typography.titleMedium) },
         maxLines = 1,
         keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            keyboardType = keyboardType
         ),
         isError = isError
     )

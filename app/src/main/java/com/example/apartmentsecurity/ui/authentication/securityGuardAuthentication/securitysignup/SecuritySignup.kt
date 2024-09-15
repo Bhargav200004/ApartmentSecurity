@@ -1,4 +1,4 @@
-package com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup
+package com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +24,10 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.authentication.component.TwoInputSection
-import kotlin.reflect.KFunction1
+
 
 @Composable
-fun AdminSignup() {
+fun SecuritySignup(modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             AppTopBar(
@@ -36,7 +36,7 @@ fun AdminSignup() {
         }
     ) { paddingValues ->
 
-        val viewModel: AdminSignupViewModel = hiltViewModel()
+        val viewModel: SecuritySignupViewModel = hiltViewModel()
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -54,7 +54,7 @@ fun AdminSignup() {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 TopTitleSignUp(
-                    text = "ADMIN SIGNUP", size = 40.sp
+                    text = "SECURITY SIGNUP", size = 40.sp
                 )
 
                 SignupFormSection(
@@ -63,7 +63,7 @@ fun AdminSignup() {
                 )
 
                 SubmitButton(
-                    onSubmitClick = { viewModel.onEvent(AdminSignupEvent.OnSubmitClick) }
+                    onSubmitClick = { viewModel.onEvent(SecuritySignupEvent.OnSubmitClick) }
                 )
                 TextClickable(
                     supportingText = "Already have Account? ",
@@ -74,28 +74,25 @@ fun AdminSignup() {
     }
 }
 
-
-
-
 @Composable
 private fun SignupFormSection(
-    state: AdminSignupData,
-    onEvent: KFunction1<AdminSignupEvent, Unit>
+    state: SecuritySignupData,
+    onEvent: (SecuritySignupEvent) -> Unit
 ) {
     Column {
         TwoInputSection(
             modifier = Modifier.fillMaxWidth(),
             firstName = state.firstName,
             lastName = state.lastName,
-            onFirstNameChange = { onEvent(AdminSignupEvent.OnFirstNameChange(it)) },
-            onLastNameChange = { onEvent(AdminSignupEvent.OnLastNameChange(it)) },
+            onFirstNameChange = { onEvent(SecuritySignupEvent.OnFirstNameChange(it)) },
+            onLastNameChange = {onEvent(SecuritySignupEvent.OnLastNameChange(it))},
             supportingText1 = "FIRST NAME",
             supportingText2 = "LAST NAME"
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
             value = state.email,
-            onValueChange = { onEvent(AdminSignupEvent.OnEmailChange(it)) },
+            onValueChange = { onEvent(SecuritySignupEvent.OnEmailChange(it)) },
             supportingText = "EMAIL ADDRESS",
             isError = state.emailError
 
@@ -103,20 +100,20 @@ private fun SignupFormSection(
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
             value = state.apartmentName,
-            onValueChange = { onEvent(AdminSignupEvent.OnApartmentNameChange(it)) },
+            onValueChange = { onEvent(SecuritySignupEvent.OnApartmentNameChange(it)) },
             supportingText = "APARTMENT NAME"
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
             value = state.userName,
-            onValueChange = { onEvent(AdminSignupEvent.OnUserNameChange(it)) },
+            onValueChange = { onEvent(SecuritySignupEvent.OnUserNameChange(it)) },
             supportingText = "USERNAME"
         )
         PasswordSection(
             value = state.password,
             isVisible = state.isPasswordVisible,
-            onValueChange = { onEvent(AdminSignupEvent.OnPasswordChange(it)) },
-            onEyeButtonClick = { onEvent(AdminSignupEvent.OnPasswordVisibilityChange(it)) },
+            onValueChange = { onEvent(SecuritySignupEvent.OnPasswordChange(it)) },
+            onEyeButtonClick = { onEvent(SecuritySignupEvent.OnPasswordVisibilityChange(it)) },
             supportingText = "PASSWORD",
             next = ImeAction.Next,
             isError = state.passwordError
@@ -124,8 +121,8 @@ private fun SignupFormSection(
         PasswordSection(
             value = state.confirmPassword,
             isVisible = state.isConfirmPasswordVisible,
-            onValueChange = { onEvent(AdminSignupEvent.OnConfirmPasswordChange(it)) },
-            onEyeButtonClick = { onEvent(AdminSignupEvent.OnConfirmPasswordVisibilityChange(it)) },
+            onValueChange = { onEvent(SecuritySignupEvent.OnConfirmPasswordChange(it)) },
+            onEyeButtonClick = { onEvent(SecuritySignupEvent.OnConfirmPasswordVisibilityChange(it)) },
             supportingText = "CONFIRM PASSWORD",
             shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp),
             next = ImeAction.Done,
@@ -134,7 +131,3 @@ private fun SignupFormSection(
     }
 
 }
-
-
-
-

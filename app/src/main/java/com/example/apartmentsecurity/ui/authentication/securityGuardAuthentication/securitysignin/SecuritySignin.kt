@@ -1,4 +1,4 @@
-package com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin
+package com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,8 @@ import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import kotlin.reflect.KFunction1
 
 @Composable
-fun AdminSignin() {
+fun SecuritySignin(modifier: Modifier = Modifier) {
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -35,7 +36,7 @@ fun AdminSignin() {
         }
     ) { paddingValues ->
 
-        val viewModel: AdminSigninViewModel = hiltViewModel()
+        val viewModel: SecuritySigninViewModel = hiltViewModel()
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -48,16 +49,16 @@ fun AdminSignin() {
         ) {
 
             TopTitleSignUp(
-                text = "ADMIN SIGNIN", size = 40.sp
+                text = "SECURITY SIGNIN", size = 40.sp
             )
 
-            AdminSignInForm(
+            SecuritySignInForm(
                 uiState = uiState,
                 onEvent = viewModel::onEvent
             )
 
             SubmitButton(
-                onSubmitClick = {viewModel.onEvent(AdminSigninEvent.OnSubmitButtonClick)}
+                onSubmitClick = {viewModel.onEvent(SecuritySigninEvent.OnSubmitButtonClick)}
             )
 
             TextClickable(
@@ -67,19 +68,19 @@ fun AdminSignin() {
 
         }
     }
-
 }
 
+
 @Composable
-private fun AdminSignInForm(
-    uiState: AdminSigninData,
-    onEvent: KFunction1<AdminSigninEvent, Unit>,
-    ) {
+private fun SecuritySignInForm(
+    uiState: SecuritySigninData,
+    onEvent: KFunction1<SecuritySigninEvent, Unit>,
+) {
     Column {
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.email,
-            onValueChange = { onEvent(AdminSigninEvent.OnEmailChange(it)) },
+            onValueChange = { onEvent(SecuritySigninEvent.OnEmailChange(it)) },
             supportingText = "Email",
             shape = RectangleShape,
             isError = false
@@ -89,8 +90,8 @@ private fun AdminSignInForm(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.password,
             isVisible = uiState.passwordVisible,
-            onValueChange = {  onEvent(AdminSigninEvent.OnPasswordChange(it)) },
-            onEyeButtonClick = { onEvent(AdminSigninEvent.OnPasswordVisibleChange(show = it))},
+            onValueChange = {  onEvent(SecuritySigninEvent.OnPasswordChange(it)) },
+            onEyeButtonClick = { onEvent(SecuritySigninEvent.OnPasswordVisibleChange(show = it))},
             supportingText = "Password",
             shape = RectangleShape,
             next = ImeAction.Done,

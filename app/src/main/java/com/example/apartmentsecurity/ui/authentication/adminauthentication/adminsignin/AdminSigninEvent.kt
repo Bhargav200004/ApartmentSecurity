@@ -8,5 +8,7 @@ sealed class AdminSigninEvent(){
 
     data class OnPasswordChange(val password : String) :  AdminSigninEvent()
 
+    data class OnPasswordVisibleChange(val show : Boolean) : AdminSigninEvent()
+
     data object OnSubmitButtonClick : AdminSigninEvent()
 }

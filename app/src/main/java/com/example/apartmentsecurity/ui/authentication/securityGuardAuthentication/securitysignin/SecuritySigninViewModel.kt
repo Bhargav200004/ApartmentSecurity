@@ -1,9 +1,8 @@
-package com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin
+package com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignin
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,25 +15,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminSigninViewModel @Inject constructor(
-    private val authRepository: FirebaseAuthenticatorImpl
-): ViewModel() {
+class SecuritySigninViewModel @Inject constructor(
 
-    private var _state = MutableStateFlow(AdminSigninData())
+) : ViewModel() {
+
+    private var _state = MutableStateFlow(SecuritySigninData())
     val state = _state.asStateFlow().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-        initialValue = AdminSigninData()
+        initialValue = SecuritySigninData()
     )
 
-    fun onEvent(event : AdminSigninEvent){
+    fun onEvent(event : SecuritySigninEvent){
         when(event){
-            is AdminSigninEvent.OnEmailChange -> onEmailChange(event.email)
-            is AdminSigninEvent.OnPasswordChange -> onPassword(event.password)
-            is AdminSigninEvent.OnPasswordVisibleChange -> onPasswordVisibleChange(event.show)
-            AdminSigninEvent.OnSubmitButtonClick -> onSubmitButtonClick()
+            is SecuritySigninEvent.OnEmailChange -> onEmailChange(event.email)
+            is SecuritySigninEvent.OnPasswordChange -> onPassword(event.password)
+            is SecuritySigninEvent.OnPasswordVisibleChange -> onPasswordVisibleChange(event.show)
+            SecuritySigninEvent.OnSubmitButtonClick -> onSubmitButtonClick()
         }
     }
+
 
     private fun onPasswordVisibleChange(show: Boolean) {
         viewModelScope.launch {
@@ -49,10 +49,10 @@ class AdminSigninViewModel @Inject constructor(
     private fun onSubmitButtonClick() {
         viewModelScope.launch {
             try {
-                authRepository.signInWithEmailPassword(
-                    state.value.email,
-                    state.value.password
-                )
+//                authRepository.signInWithEmailPassword(
+//                    state.value.email,
+//                    state.value.password
+//                )
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
                 Log.d("SignIn","Success")
             }
@@ -85,5 +85,4 @@ class AdminSigninViewModel @Inject constructor(
             }
         }
     }
-
 }

@@ -1,12 +1,9 @@
-package com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup
+package com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignup
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
-import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
-import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import com.example.apartmentsecurity.util.ValidationResult
@@ -22,45 +19,34 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminSignupViewModel @Inject constructor(
-    private val authRepository : FirebaseAuthenticatorImpl,
-    private val firebaseFireStore: FirebaseFireStoreImpl
-) : ViewModel() {
+class SecuritySignupViewModel @Inject constructor(
 
-    private var _state = MutableStateFlow(AdminSignupData())
+): ViewModel() {
+
+    private var _state = MutableStateFlow(SecuritySignupData())
     val state = _state.asStateFlow().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
-        initialValue = AdminSignupData()
+        initialValue = SecuritySignupData()
     )
 
 
-    fun onEvent(event: AdminSignupEvent) {
-        when (event) {
-            is AdminSignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)
-            is AdminSignupEvent.OnLastNameChange -> onLastNameChange(event.lName)
-            is AdminSignupEvent.OnEmailChange -> onEmailNameChange(event.email)
-            is AdminSignupEvent.OnApartmentNameChange -> onApartNameChange(event.apartmentName)
-            is AdminSignupEvent.OnUserNameChange -> onUserNameChange(event.userName)
-            is AdminSignupEvent.OnPasswordChange -> onPasswordChange(event.password)
-            is AdminSignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
-            is AdminSignupEvent.OnPasswordVisibilityChange -> onPasswordVisibleChange(event.isPasswordVisible)
-            is AdminSignupEvent.OnConfirmPasswordVisibilityChange -> onConfirmPasswordVisibleChange(event.isConfirmPasswordVisible)
-            AdminSignupEvent.OnSubmitClick -> onSubmitButtonClick()
-            AdminSignupEvent.OnErrorChange -> onErrorChange()
+    fun onEvent(event : SecuritySignupEvent){
+        when(event){
+            is SecuritySignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)
+            is SecuritySignupEvent.OnLastNameChange -> onLastNameChange(event.lName)
+            is SecuritySignupEvent.OnEmailChange -> onEmailNameChange(event.email)
+            is SecuritySignupEvent.OnApartmentNameChange -> onApartNameChange(event.apartmentName)
+            is SecuritySignupEvent.OnUserNameChange -> onUserNameChange(event.userName)
+            is SecuritySignupEvent.OnPasswordChange -> onPasswordChange(event.password)
+            is SecuritySignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
+            is SecuritySignupEvent.OnPasswordVisibilityChange -> onPasswordVisibleChange(event.isPasswordVisible)
+            is SecuritySignupEvent.OnConfirmPasswordVisibilityChange -> onConfirmPasswordVisibleChange(event.isConfirmPasswordVisible)
+            SecuritySignupEvent.OnErrorChange -> onErrorChange()
+            SecuritySignupEvent.OnSubmitClick -> onSubmitButtonClick()
         }
     }
 
-    fun onErrorChange() {
-        viewModelScope.launch {
-            _state.update {state ->
-                state.copy(
-                    emailError = !validateEmail(),
-                    passwordError = !validatePassword()
-                )
-            }
-        }
-    }
 
     private fun onSubmitButtonClick() {
         viewModelScope.launch {
@@ -77,9 +63,9 @@ class AdminSignupViewModel @Inject constructor(
                         state.value.errorMessagePassword
                     else {
                         circularProgressBarShow(show = true)
-                        signUpWithEmailPassword()
+                        //Here signing
                         delay(4000)
-                        createDatabase()
+                        //Here createDatabase
                         circularProgressBarShow(show = false)
                         "SignUp SuccessFully"
                     }
@@ -88,53 +74,108 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
-
-
-    private fun createDatabase(){
+    fun onErrorChange() {
         viewModelScope.launch {
-            try {
-                val adminData = AdminData(
-                    fName = state.value.firstName,
-                    lName = state.value.lastName,
-                    userName = state.value.userName
+            _state.update {state ->
+                state.copy(
+                    emailError = !validateEmail(),
+                    passwordError = !validatePassword()
                 )
-                if ( state.value.user?.user?.uid != null){
-                    val user = authRepository.getUser()!!.uid
-                    val apartmentName = state.value.apartmentName
-                    firebaseFireStore.create(
-                        collection = state.value.user?.user?.uid!!,
-                        document = state.value.apartmentName,
-                        adminData = adminData
-                    )
-                    Log.d("Checkingerror" , "user are registered number $user , $apartmentName")
-                }
-                else{
-                    Log.d("Checkingerror" , "user are not registered number")
-                }
-
-            }catch (e : Exception){
-                Log.e("Checkingerror" , e.message.toString())
             }
         }
     }
 
-    private fun signUpWithEmailPassword() {
+    private fun onLastNameChange(lName: String) {
         viewModelScope.launch {
-            try {
-                val result = authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
-                _state.update {state ->
-                    state.copy(
-                        user = result
-                    )
-                }
-
-            }
-            catch (e : Exception){
-                Log.e("errorMessage" , "${e.message}" )
+            _state.update {state ->
+                state.copy(
+                    lastName = lName
+                )
             }
         }
     }
-    
+
+    private fun onFirstNameChange(fName: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    firstName = fName
+                )
+            }
+        }
+    }
+
+    private fun onEmailNameChange(email: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        email = email
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun onApartNameChange(apartmentName: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        apartmentName = apartmentName
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun onUserNameChange(username: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        userName = username
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun onConfirmPasswordChange(confirmPassword: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        confirmPassword = confirmPassword
+                    )
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun onPasswordChange(password: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        password = password
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
     private fun onPasswordVisibleChange(passwordVisible: Boolean) {
         try {
             viewModelScope.launch {
@@ -162,112 +203,6 @@ class AdminSignupViewModel @Inject constructor(
             Log.e(TAG, "${e.message}")
         }
     }
-
-    private fun onFirstNameChange(fName: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        firstName = fName
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onLastNameChange(lName: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        lastName = lName
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onEmailNameChange(email: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        email = email
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onApartNameChange(apartmentName: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        apartmentName = apartmentName
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onUserNameChange(username: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        userName = username
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onPasswordChange(password: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        password = password
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
-
-    private fun onConfirmPasswordChange(confirmPassword: String) {
-        try {
-            viewModelScope.launch {
-                _state.update { state ->
-                    state.copy(
-                        confirmPassword = confirmPassword
-                    )
-                }
-            }
-
-        } catch (e: Exception) {
-            Log.e(TAG, "${e.message}")
-        }
-    }
-
 
 
 
@@ -320,4 +255,3 @@ class AdminSignupViewModel @Inject constructor(
     }
 
 }
-
