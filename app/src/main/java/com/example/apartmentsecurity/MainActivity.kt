@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignup.UserSignup
+import com.example.apartmentsecurity.ui.navigation.AppNavigation
 import com.example.apartmentsecurity.ui.theme.ApartmentSecurityTheme
 import com.example.apartmentsecurity.util.ObserverAsEvents
 import com.example.apartmentsecurity.util.SnackBarController
@@ -64,7 +65,8 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(paddingValues = innerPadding)
                     ) {
-                        UserSignin()
+//                        UserSignin()
+                        AppNavigation()
                     }
                 }
             }

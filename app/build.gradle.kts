@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.google.service)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 
@@ -90,7 +91,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
 
-
+    //Serialization
+    implementation(libs.kotlinx.serialization.json)
 
 
 }

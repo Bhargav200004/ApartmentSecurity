@@ -1,6 +1,6 @@
 [versions]
 agp = "8.6.0"
-firebaseBom = "33.2.0"
+firebaseBom = "33.3.0"
 hiltAndroidCompiler = "2.48.1"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
@@ -17,6 +17,7 @@ kspVersion = "2.0.20-1.0.25"
 hiltVersion = "2.49"
 hiltCompiler = "1.2.0"
 googleSeviceVersion = "4.4.2"
+kotlinxSerializationJson = "1.7.1"
 
 
 
@@ -49,7 +50,7 @@ androidx-navigation-compose = { group = "androidx.navigation",name = "navigation
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
 androidx-material-icons-extended = {  group = "androidx.compose.material", name = "material-icons-extended"}
-
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 
 [plugins]
@@ -59,7 +60,7 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 ksp = { id = "com.google.devtools.ksp" ,  version.ref = "kspVersion"}
 hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "hiltVersion"}
 google-service = {id = "com.google.gms.google-services" , version.ref = "googleSeviceVersion"}
-
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 firebase = [ "firebase-analytics" , "firebase-auth" , 'firebase-firestore']
