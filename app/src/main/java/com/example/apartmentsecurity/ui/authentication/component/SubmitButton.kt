@@ -13,10 +13,12 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SubmitButton(
+    modifier: Modifier = Modifier,
+    text  : String = "Submit",
     onSubmitClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         onClick = onSubmitClick,
         border = BorderStroke(1.dp, color = ButtonDefaults.outlinedButtonColors().contentColor),
         shape = RoundedCornerShape(15.dp),
@@ -25,6 +27,6 @@ fun SubmitButton(
             contentColor = ButtonDefaults.outlinedButtonColors().contentColor
         )
     ) {
-        TopTitleSignUp(text = "Submit", size = 20.sp)
+        TopTitleSignUp(text = text, size = 20.sp)
     }
 }

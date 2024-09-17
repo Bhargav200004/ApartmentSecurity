@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             .padding(paddingValues = innerPadding)
                     ) {
 //                        UserSignin()
-                        AppNavigation()
+                        MainScreen()
                     }
                 }
             }

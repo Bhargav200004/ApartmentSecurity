@@ -94,5 +94,7 @@ dependencies {
     //Serialization
     implementation(libs.kotlinx.serialization.json)
 
+    implementation(libs.constraintlayout)
+
 
 }

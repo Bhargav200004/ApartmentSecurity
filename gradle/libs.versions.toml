@@ -18,7 +18,7 @@ hiltVersion = "2.49"
 hiltCompiler = "1.2.0"
 googleSeviceVersion = "4.4.2"
 kotlinxSerializationJson = "1.7.1"
-
+constrainVersion = "1.0.1"
 
 
 
@@ -51,7 +51,7 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
 androidx-material-icons-extended = {  group = "androidx.compose.material", name = "material-icons-extended"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-
+constraintlayout = { group = "androidx.constraintlayout" , name = "constraintlayout-compose" , version.ref = "constrainVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
