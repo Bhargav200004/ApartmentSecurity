@@ -15,8 +15,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
-import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignup.UserSignup
 import com.example.apartmentsecurity.ui.navigation.AppNavigation
 import com.example.apartmentsecurity.ui.theme.ApartmentSecurityTheme
 import com.example.apartmentsecurity.util.ObserverAsEvents
@@ -66,7 +64,8 @@ class MainActivity : ComponentActivity() {
                             .padding(paddingValues = innerPadding)
                     ) {
 //                        UserSignin()
-                        MainScreen()
+//                        MainScreen()
+                        AppNavigation()
                     }
                 }
             }

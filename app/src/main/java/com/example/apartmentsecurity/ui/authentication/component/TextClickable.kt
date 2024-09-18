@@ -19,7 +19,8 @@ import com.example.apartmentsecurity.ui.theme.onTertiaryContainerLight
 @Composable
 fun TextClickable(
     supportingText: String,
-    clickableText: String
+    clickableText: String,
+    onTextClick : () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
@@ -40,7 +41,7 @@ fun TextClickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                 ) {
-
+                    onTextClick()
                 },
             text = clickableText,
 

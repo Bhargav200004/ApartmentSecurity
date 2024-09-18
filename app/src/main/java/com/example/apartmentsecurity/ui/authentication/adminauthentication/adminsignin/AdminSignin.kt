@@ -17,20 +17,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
 import com.example.apartmentsecurity.ui.authentication.component.SingleInputSection
 import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
+import com.example.apartmentsecurity.ui.navigation.AdminAuthScreen
+import com.example.apartmentsecurity.ui.navigation.AppScreen
 import kotlin.reflect.KFunction1
 
 @Composable
-fun AdminSignin() {
+fun AdminSignin(navController: NavController) {
     Scaffold(
         topBar = {
             AppTopBar(
-                onBackClick = {}
+                onBackClick = {
+                    navController.popBackStack(route = AppScreen.MainScreen , inclusive = false)
+                }
             )
         }
     ) { paddingValues ->
@@ -57,12 +63,18 @@ fun AdminSignin() {
             )
 
             SubmitButton(
-                onSubmitClick = {viewModel.onEvent(AdminSigninEvent.OnSubmitButtonClick)}
+                onSubmitClick = {
+                    navController.navigate(route = AppScreen.MainScreen)
+//                    viewModel.onEvent(AdminSigninEvent.OnSubmitButtonClick)
+                }
             )
 
             TextClickable(
                 supportingText = "Don't have Account? ",
-                clickableText = "SignUp"
+                clickableText = "SignUp",
+                onTextClick = {
+                    navController.navigate(route = AdminAuthScreen.Signup)
+                }
             )
 
         }

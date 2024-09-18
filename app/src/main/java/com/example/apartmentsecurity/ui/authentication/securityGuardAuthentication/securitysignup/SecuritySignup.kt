@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
 import com.example.apartmentsecurity.ui.authentication.component.SingleInputSection
@@ -24,14 +25,18 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.authentication.component.TwoInputSection
+import com.example.apartmentsecurity.ui.navigation.AppScreen
+import com.example.apartmentsecurity.ui.navigation.SecurityAuthScreen
 
 
 @Composable
-fun SecuritySignup(modifier: Modifier = Modifier) {
+fun SecuritySignup(navController: NavController) {
     Scaffold(
         topBar = {
             AppTopBar(
-                onBackClick = {}
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { paddingValues ->
@@ -50,7 +55,7 @@ fun SecuritySignup(modifier: Modifier = Modifier) {
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            if (uiState.circularProgressionBarShow) {
+            if ( false/*uiState.circularProgressionBarShow*/) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 TopTitleSignUp(
@@ -63,11 +68,17 @@ fun SecuritySignup(modifier: Modifier = Modifier) {
                 )
 
                 SubmitButton(
-                    onSubmitClick = { viewModel.onEvent(SecuritySignupEvent.OnSubmitClick) }
+                    onSubmitClick = {
+                        navController.navigate(route = SecurityAuthScreen.Signin)
+//                        viewModel.onEvent(SecuritySignupEvent.OnSubmitClick)
+                    }
                 )
                 TextClickable(
                     supportingText = "Already have Account? ",
-                    clickableText = "Log In"
+                    clickableText = "Log In",
+                    onTextClick = {
+                        navController.navigate(route = SecurityAuthScreen.Signin)
+                    }
                 )
             }
         }

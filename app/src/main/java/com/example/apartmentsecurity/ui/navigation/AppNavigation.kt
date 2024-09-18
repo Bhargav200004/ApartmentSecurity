@@ -1,16 +1,18 @@
 package com.example.apartmentsecurity.ui.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.apartmentsecurity.MainScreen
+import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSignin
+import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup.AdminSignup
+import com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignin.SecuritySignin
+import com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignup.SecuritySignup
+import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
+import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignup.UserSignup
 
 
 @Composable
@@ -21,46 +23,33 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     NavHost(navController = navHostController , startDestination = AppScreen.MainScreen){
 
         composable<AppScreen.MainScreen> {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Button(onClick = {navHostController.navigate(AuthScreen.AdminAuth)}) {
-                    Text("Going for the Auth Screen")
-                }
-                Button(onClick = {navHostController.navigate(AuthScreen.UserAuth)}) {
-                    Text("Going for the Auth Screen")
-                }
-                Button(onClick = {navHostController.navigate(AuthScreen.SecurityAuth)}) {
-                    Text("Going for the Auth Screen")
-                }
-            }
+            MainScreen(navController = navHostController)
         }
 
         navigation<AuthScreen.AdminAuth>(startDestination = AdminAuthScreen.Signup){
             composable<AdminAuthScreen.Signup> {
-                Text("Admin Signup AuthScreen")
+                AdminSignup(navController = navHostController )
             }
             composable<AdminAuthScreen.Signin> {
-                Text("Admin Signin AuthScreen")
+                AdminSignin(navController = navHostController)
             }
         }
 
         navigation<AuthScreen.UserAuth>(startDestination = UserAuthScreen.Signup){
             composable<UserAuthScreen.Signup>{
-                Text("User Signup Screen")
+                UserSignup(navController =  navHostController)
             }
             composable<UserAuthScreen.Signin> {
-                Text("User Signin Screen")
+                UserSignin(navController = navHostController)
             }
         }
 
         navigation<AuthScreen.SecurityAuth>(startDestination = SecurityAuthScreen.Signup){
             composable<SecurityAuthScreen.Signup>{
-                Text("Security Signup Screen")
+                SecuritySignup(navController = navHostController)
             }
             composable<SecurityAuthScreen.Signin> {
-                Text("Security Signin Screen")
+                SecuritySignin(navController =  navHostController)
             }
         }
 

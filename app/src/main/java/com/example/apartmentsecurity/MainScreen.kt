@@ -8,22 +8,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
+import com.example.apartmentsecurity.ui.navigation.AuthScreen
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
 
     val height = LocalConfiguration.current.screenHeightDp.dp
     val width = LocalConfiguration.current.screenWidthDp.dp
@@ -74,7 +73,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             end.linkTo(parent.end, margin = 150.dp)
                         },
                     text = "admin",
-                    onSubmitClick = { /*TODO*/ }
+                    onSubmitClick = { navController.navigate(AuthScreen.AdminAuth) }
                 )
                 SubmitButton(
                     modifier = Modifier
@@ -84,7 +83,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             end.linkTo(parent.end, margin = 85.dp)
                         },
                     text = "user",
-                    onSubmitClick = { /*TODO*/ }
+                    onSubmitClick = { navController.navigate(AuthScreen.UserAuth) }
                 )
                 SubmitButton(
                     modifier = Modifier
@@ -94,7 +93,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                             end.linkTo(parent.end, margin = 10.dp)
                         },
                     text = "securityGuard",
-                    onSubmitClick = { /*TODO*/ }
+                    onSubmitClick = { navController.navigate(AuthScreen.SecurityAuth) }
                 )
 
             }

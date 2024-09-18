@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninData
 import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninEvent
 import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninViewModel
@@ -26,14 +28,18 @@ import com.example.apartmentsecurity.ui.authentication.component.SingleInputSect
 import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
+import com.example.apartmentsecurity.ui.navigation.AppScreen
+import com.example.apartmentsecurity.ui.navigation.UserAuthScreen
 import kotlin.reflect.KFunction1
 
 @Composable
-fun UserSignin(){
+fun UserSignin(navController: NavController) {
     Scaffold(
         topBar = {
             AppTopBar(
-                onBackClick = {}
+                onBackClick = {
+                    navController.popBackStack(route = AppScreen.MainScreen , inclusive = false)
+                }
             )
         }
     ) { paddingValues ->
@@ -60,12 +66,18 @@ fun UserSignin(){
             )
 
             SubmitButton(
-                onSubmitClick = {viewModel.onEvent(UserSigninEvent.OnSubmitButtonClick)}
+                onSubmitClick = {
+                    navController.navigate(route = AppScreen.MainScreen)
+//                    viewModel.onEvent(UserSigninEvent.OnSubmitButtonClick)
+                }
             )
 
             TextClickable(
                 supportingText = "Don't have Account? ",
-                clickableText = "SignUp"
+                clickableText = "SignUp",
+                onTextClick = {
+                    navController.navigate(route = UserAuthScreen.Signup)
+                }
             )
 
         }
@@ -91,8 +103,8 @@ private fun UserSignInForm(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.password,
             isVisible = uiState.passwordVisible,
-            onValueChange = {  onEvent(UserSigninEvent.OnPasswordChange(it)) },
-            onEyeButtonClick = { onEvent(UserSigninEvent.OnPasswordVisibleChange(show = it))},
+            onValueChange = { onEvent(UserSigninEvent.OnPasswordChange(it)) },
+            onEyeButtonClick = { onEvent(UserSigninEvent.OnPasswordVisibleChange(show = it)) },
             supportingText = "Password",
             shape = RectangleShape,
             next = ImeAction.Done,

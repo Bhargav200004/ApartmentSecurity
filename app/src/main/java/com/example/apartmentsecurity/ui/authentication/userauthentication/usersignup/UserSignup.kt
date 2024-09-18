@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignup.AdminSignupEvent
+import androidx.navigation.NavController
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.InputText
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
@@ -29,15 +29,18 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.authentication.component.TwoInputSection
+import com.example.apartmentsecurity.ui.navigation.UserAuthScreen
 import kotlin.reflect.KFunction1
 
 
 @Composable
-fun UserSignup(modifier: Modifier = Modifier) {
+fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
     Scaffold(
         topBar = {
             AppTopBar(
-                onBackClick = {}
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { paddingValues ->
@@ -68,11 +71,17 @@ fun UserSignup(modifier: Modifier = Modifier) {
                 )
 
                 SubmitButton(
-                    onSubmitClick = {  }
+                    onSubmitClick = {
+                        navController.navigate(route = UserAuthScreen.Signin)
+                    }
                 )
                 TextClickable(
                     supportingText = "Already have Account? ",
-                    clickableText = "Log In"
+                    clickableText = "Log In",
+                    onTextClick = {
+                        navController.navigate(route = UserAuthScreen.Signin)
+
+                    }
                 )
             }
         }
