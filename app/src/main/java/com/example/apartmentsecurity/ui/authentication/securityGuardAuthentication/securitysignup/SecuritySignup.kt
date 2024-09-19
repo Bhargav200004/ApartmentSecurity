@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,6 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.authentication.component.TwoInputSection
-import com.example.apartmentsecurity.ui.navigation.AppScreen
 import com.example.apartmentsecurity.ui.navigation.SecurityAuthScreen
 
 
@@ -47,6 +47,10 @@ fun SecuritySignup(navController: NavController) {
 
         viewModel.onErrorChange()
 
+        LaunchedEffect(key1 = uiState.navigationApproval) {
+            if (uiState.navigationApproval) navController.navigate(route = SecurityAuthScreen.Signin)
+        }
+
 
         Column(
             modifier = Modifier
@@ -55,7 +59,7 @@ fun SecuritySignup(navController: NavController) {
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            if ( false/*uiState.circularProgressionBarShow*/) {
+            if (uiState.circularProgressionBarShow) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 TopTitleSignUp(
@@ -69,8 +73,7 @@ fun SecuritySignup(navController: NavController) {
 
                 SubmitButton(
                     onSubmitClick = {
-                        navController.navigate(route = SecurityAuthScreen.Signin)
-//                        viewModel.onEvent(SecuritySignupEvent.OnSubmitClick)
+                        viewModel.onEvent(SecuritySignupEvent.OnSubmitClick)
                     }
                 )
                 TextClickable(

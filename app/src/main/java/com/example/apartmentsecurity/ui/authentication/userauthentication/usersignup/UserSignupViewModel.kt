@@ -4,8 +4,12 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.domain.FirebaseAuthenticator
+import com.example.apartmentsecurity.util.SnackBarController
+import com.example.apartmentsecurity.util.SnackBarEvent
 import com.example.apartmentsecurity.util.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserSignupViewModel @Inject constructor(
-
+    private val authRepository : FirebaseAuthenticator,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(UserSignupData())
@@ -39,8 +43,69 @@ class UserSignupViewModel @Inject constructor(
             is UserSignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
             is UserSignupEvent.OnPasswordVisibilityChange -> onPasswordVisibleChange(event.isPasswordVisible)
             is UserSignupEvent.OnConfirmPasswordVisibilityChange -> onConfirmPasswordVisibleChange(event.isConfirmPasswordVisible)
+            UserSignupEvent.OnSubmitClick -> onSubmitButtonClick()
         }
     }
+
+
+
+    private fun onSubmitButtonClick() {
+        viewModelScope.launch {
+            SnackBarController.sendEvent(
+                event = SnackBarEvent(
+                    message =
+                    if(state.value.emailError && state.value.passwordError){
+                        "${state.value.errorMessageEmail}\n${state.value.errorMessagePassword}"
+                    }
+                    else if (state.value.emailError)
+                        state.value.errorMessageEmail
+                    else if (state.value.passwordError)
+                        state.value.errorMessagePassword
+                    else {
+                        circularProgressBarShow(show = true)
+                        signUpWithEmailPassword()
+                        delay(4000)
+                        circularProgressBarShow(show = false)
+                        state.value.firebaseError
+                    }
+                )
+            )
+        }
+    }
+
+
+
+    private fun signUpWithEmailPassword() {
+        viewModelScope.launch {
+            try {
+                val result = authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
+                _state.update {state ->
+                    state.copy(
+                        user = result,
+                        firebaseError = "SignUp SuccessFully"
+                    )
+                }
+                delay(4000)
+//                createDatabase()
+                //User1@gmail.com
+                //Filmmaker2004#
+                _state.update {state ->
+                    state.copy(
+                        navigationApproval = true
+                    )
+                }
+            }
+            catch (e : Exception){
+                _state.update {state ->
+                    state.copy(
+                        firebaseError = e.message.toString()
+                    )
+                }
+                Log.e("errorMessage" , "${e.message}" )
+            }
+        }
+    }
+
 
 
     fun onErrorChange() {
@@ -195,6 +260,16 @@ class UserSignupViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun circularProgressBarShow(show : Boolean) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    circularProgressionBarShow = show
+                )
+            }
         }
     }
 

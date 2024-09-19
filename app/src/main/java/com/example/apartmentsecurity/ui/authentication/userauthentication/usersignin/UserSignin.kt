@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -29,7 +30,9 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.navigation.AppScreen
+import com.example.apartmentsecurity.ui.navigation.AuthScreen
 import com.example.apartmentsecurity.ui.navigation.UserAuthScreen
+import com.example.apartmentsecurity.ui.navigation.UserScreen
 import kotlin.reflect.KFunction1
 
 @Composable
@@ -47,6 +50,10 @@ fun UserSignin(navController: NavController) {
         val viewModel: UserSigninViewModel = hiltViewModel()
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+        LaunchedEffect(key1 = uiState.navigationApproval) {
+            if (uiState.navigationApproval) navController.navigate(route = UserScreen.User)
+        }
 
         Column(
             modifier = Modifier
@@ -67,8 +74,7 @@ fun UserSignin(navController: NavController) {
 
             SubmitButton(
                 onSubmitClick = {
-                    navController.navigate(route = AppScreen.MainScreen)
-//                    viewModel.onEvent(UserSigninEvent.OnSubmitButtonClick)
+                    viewModel.onEvent(UserSigninEvent.OnSubmitButtonClick)
                 }
             )
 

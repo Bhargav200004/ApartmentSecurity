@@ -23,4 +23,6 @@ sealed class UserSignupEvent {
     data class OnPasswordVisibilityChange(val isPasswordVisible : Boolean) : UserSignupEvent()
 
     data class OnConfirmPasswordVisibilityChange(val isConfirmPasswordVisible : Boolean ) : UserSignupEvent()
+
+    data object OnSubmitClick : UserSignupEvent()
 }

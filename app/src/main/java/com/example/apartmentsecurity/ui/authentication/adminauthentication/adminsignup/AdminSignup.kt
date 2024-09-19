@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
 import com.example.apartmentsecurity.ui.authentication.component.SingleInputSection
@@ -47,6 +47,10 @@ fun AdminSignup(navController: NavController) {
 
         viewModel.onErrorChange()
 
+        LaunchedEffect(key1 = uiState.navigationApproval) {
+            if(uiState.navigationApproval) navController.navigate(route = AdminAuthScreen.Signin)
+        }
+
 
         Column(
             modifier = Modifier
@@ -69,8 +73,8 @@ fun AdminSignup(navController: NavController) {
 
                 SubmitButton(
                     onSubmitClick = {
-                        navController.navigate(route = AdminAuthScreen.Signin)
-//                        viewModel.onEvent(AdminSignupEvent.OnSubmitClick)
+                        viewModel.onEvent(AdminSignupEvent.OnSubmitClick)
+
                     }
                 )
                 TextClickable(

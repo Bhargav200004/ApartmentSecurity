@@ -53,7 +53,15 @@ class AdminSigninViewModel @Inject constructor(
                     state.value.email,
                     state.value.password
                 )
+
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
+                _state.update { state ->
+                    state.copy(
+                        navigationApproval = true
+                    )
+                }
+                //dummy1@gmail.com
+                //Filmmaker2004#
                 Log.d("SignIn","Success")
             }
             catch (e : Exception){
@@ -62,7 +70,6 @@ class AdminSigninViewModel @Inject constructor(
             }
 
         }
-
     }
 
     private fun onPassword(password: String) {

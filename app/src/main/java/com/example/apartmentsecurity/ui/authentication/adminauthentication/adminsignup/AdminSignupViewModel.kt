@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
 import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
+import com.example.apartmentsecurity.domain.FireStore
+import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
@@ -15,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,8 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AdminSignupViewModel @Inject constructor(
-    private val authRepository : FirebaseAuthenticatorImpl,
-    private val firebaseFireStore: FirebaseFireStoreImpl
+    private val authRepository : FirebaseAuthenticator,
+    private val firebaseFireStore: FireStore,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(AdminSignupData())
@@ -33,6 +36,9 @@ class AdminSignupViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
         initialValue = AdminSignupData()
     )
+
+
+
 
 
     fun onEvent(event: AdminSignupEvent) {
@@ -68,7 +74,6 @@ class AdminSignupViewModel @Inject constructor(
                 event = SnackBarEvent(
                     message =
                     if(state.value.emailError && state.value.passwordError){
-
                         "${state.value.errorMessageEmail}\n${state.value.errorMessagePassword}"
                     }
                     else if (state.value.emailError)
@@ -79,15 +84,13 @@ class AdminSignupViewModel @Inject constructor(
                         circularProgressBarShow(show = true)
                         signUpWithEmailPassword()
                         delay(4000)
-                        createDatabase()
                         circularProgressBarShow(show = false)
-                        "SignUp SuccessFully"
+                        state.value.firebaseError
                     }
                 )
             )
         }
     }
-
 
 
     private fun createDatabase(){
@@ -124,12 +127,24 @@ class AdminSignupViewModel @Inject constructor(
                 val result = authRepository.signUpWithEmailPassword(state.value.email , state.value.password)
                 _state.update {state ->
                     state.copy(
-                        user = result
+                        user = result,
+                        firebaseError = "SignUp SuccessFully"
                     )
                 }
-
+                delay(4000)
+//                createDatabase()
+                _state.update {state ->
+                    state.copy(
+                        navigationApproval = true
+                    )
+                }
             }
             catch (e : Exception){
+                _state.update {state ->
+                    state.copy(
+                        firebaseError = e.message.toString()
+                    )
+                }
                 Log.e("errorMessage" , "${e.message}" )
             }
         }
@@ -159,6 +174,7 @@ class AdminSignupViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+
             Log.e(TAG, "${e.message}")
         }
     }

@@ -3,5 +3,6 @@ package com.example.apartmentsecurity.ui.authentication.securityGuardAuthenticat
 data class SecuritySigninData(
     val email : String = "" ,
     val password : String = "",
-    val passwordVisible : Boolean = false
+    val passwordVisible : Boolean = false,
+    val navigationApproval : Boolean = false
 )

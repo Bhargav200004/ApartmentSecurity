@@ -51,11 +51,11 @@ sealed class AdminScreen{
 @Serializable
 sealed class UserScreen{
     @Serializable
-    data object Admin : UserScreen()
+    data object User : UserScreen()
 }
 
 @Serializable
 sealed class SecurityScreen{
     @Serializable
-    data object Admin : SecurityScreen()
+    data object Security : SecurityScreen()
 }

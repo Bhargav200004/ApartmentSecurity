@@ -17,5 +17,7 @@ data class SecuritySignupData(
     val errorMessageEmail: String = "",
     val errorMessagePassword : String = "",
     val user : AuthResult? = null,
-    val circularProgressionBarShow : Boolean = false
+    val circularProgressionBarShow : Boolean = false,
+    val firebaseError : String = "SignUp SuccessFully",
+    val navigationApproval : Boolean = false
 )

@@ -1,9 +1,9 @@
 package com.example.apartmentsecurity.di
 
-import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
 import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
 import com.example.apartmentsecurity.domain.FireStore
+import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -46,5 +46,6 @@ object Firebase {
     ) : FireStore {
         return FirebaseFireStoreImpl(db = fireStore)
     }
+
 
 }

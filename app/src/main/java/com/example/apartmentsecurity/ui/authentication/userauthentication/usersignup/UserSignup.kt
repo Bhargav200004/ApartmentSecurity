@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +35,7 @@ import kotlin.reflect.KFunction1
 
 
 @Composable
-fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
+fun UserSignup(navController: NavController) {
     Scaffold(
         topBar = {
             AppTopBar(
@@ -49,6 +50,10 @@ fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
+        LaunchedEffect(key1 = uiState.navigationApproval){
+            if (uiState.navigationApproval) navController.navigate(route = UserAuthScreen.Signin)
+        }
+
         viewModel.onErrorChange()
 
         Column(
@@ -58,7 +63,7 @@ fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            if (/*uiState.circularProgressionBarShow*/ false) {
+            if (uiState.circularProgressionBarShow) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 TopTitleSignUp(
@@ -72,7 +77,7 @@ fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
 
                 SubmitButton(
                     onSubmitClick = {
-                        navController.navigate(route = UserAuthScreen.Signin)
+                        viewModel.onEvent(UserSignupEvent.OnSubmitClick)
                     }
                 )
                 TextClickable(
@@ -80,7 +85,6 @@ fun UserSignup(modifier: Modifier = Modifier , navController: NavController) {
                     clickableText = "Log In",
                     onTextClick = {
                         navController.navigate(route = UserAuthScreen.Signin)
-
                     }
                 )
             }

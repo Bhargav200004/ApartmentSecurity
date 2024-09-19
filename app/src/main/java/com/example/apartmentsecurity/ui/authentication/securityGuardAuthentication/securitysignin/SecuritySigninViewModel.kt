@@ -3,6 +3,7 @@ package com.example.apartmentsecurity.ui.authentication.securityGuardAuthenticat
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SecuritySigninViewModel @Inject constructor(
-
+    private val authRepository: FirebaseAuthenticator
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(SecuritySigninData())
@@ -35,6 +36,31 @@ class SecuritySigninViewModel @Inject constructor(
         }
     }
 
+    private fun onSubmitButtonClick() {
+        viewModelScope.launch {
+            try {
+                authRepository.signInWithEmailPassword(
+                    state.value.email,
+                    state.value.password
+                )
+
+                SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
+                _state.update { state ->
+                    state.copy(
+                        navigationApproval = true
+                    )
+                }
+                //dummy1@gmail.com
+                //Filmmaker2004#
+                Log.d("SignIn","Success")
+            }
+            catch (e : Exception){
+                SnackBarController.sendEvent(SnackBarEvent(message = "Email and password not match"))
+                Log.e("SignIn",e.message.toString())
+            }
+
+        }
+    }
 
     private fun onPasswordVisibleChange(show: Boolean) {
         viewModelScope.launch {
@@ -46,25 +72,6 @@ class SecuritySigninViewModel @Inject constructor(
         }
     }
 
-    private fun onSubmitButtonClick() {
-        viewModelScope.launch {
-            try {
-//                authRepository.signInWithEmailPassword(
-//                    state.value.email,
-//                    state.value.password
-//                )
-                SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
-                Log.d("SignIn","Success")
-            }
-            catch (e : Exception){
-                SnackBarController.sendEvent(SnackBarEvent(message = "Email and password not match"))
-                Log.e("SignIn",e.message.toString())
-            }
-
-        }
-
-    }
-
     private fun onPassword(password: String) {
         viewModelScope.launch {
             _state.update { state ->
@@ -74,7 +81,6 @@ class SecuritySigninViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun onEmailChange(event: String) {
         viewModelScope.launch {

@@ -1,5 +1,6 @@
 package com.example.apartmentsecurity.ui.navigation
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -33,6 +34,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable<AdminAuthScreen.Signin> {
                 AdminSignin(navController = navHostController)
             }
+            composable<AdminScreen.Admin> {
+                Text("Admin Screen")
+            }
         }
 
         navigation<AuthScreen.UserAuth>(startDestination = UserAuthScreen.Signup){
@@ -42,6 +46,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             composable<UserAuthScreen.Signin> {
                 UserSignin(navController = navHostController)
             }
+            composable<UserScreen.User> {
+                Text("User Screen")
+            }
         }
 
         navigation<AuthScreen.SecurityAuth>(startDestination = SecurityAuthScreen.Signup){
@@ -50,6 +57,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             }
             composable<SecurityAuthScreen.Signin> {
                 SecuritySignin(navController =  navHostController)
+            }
+            composable<SecurityScreen.Security> {
+                Text("Security Screen")
             }
         }
 

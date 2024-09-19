@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -26,6 +27,7 @@ import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.authentication.component.TextClickable
 import com.example.apartmentsecurity.ui.authentication.component.TopTitleSignUp
 import com.example.apartmentsecurity.ui.navigation.AdminAuthScreen
+import com.example.apartmentsecurity.ui.navigation.AdminScreen
 import com.example.apartmentsecurity.ui.navigation.AppScreen
 import kotlin.reflect.KFunction1
 
@@ -41,9 +43,16 @@ fun AdminSignin(navController: NavController) {
         }
     ) { paddingValues ->
 
+
+
         val viewModel: AdminSigninViewModel = hiltViewModel()
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
+
+
+        LaunchedEffect(key1 = uiState.navigationApproval) {
+            if (uiState.navigationApproval) navController.navigate(route = AdminScreen.Admin)
+        }
 
         Column(
             modifier = Modifier
@@ -64,8 +73,7 @@ fun AdminSignin(navController: NavController) {
 
             SubmitButton(
                 onSubmitClick = {
-                    navController.navigate(route = AppScreen.MainScreen)
-//                    viewModel.onEvent(AdminSigninEvent.OnSubmitButtonClick)
+                    viewModel.onEvent(AdminSigninEvent.OnSubmitButtonClick)
                 }
             )
 

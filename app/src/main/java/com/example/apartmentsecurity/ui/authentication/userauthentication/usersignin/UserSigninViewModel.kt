@@ -3,16 +3,22 @@ package com.example.apartmentsecurity.ui.authentication.userauthentication.users
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserSigninViewModel : ViewModel() {
+@HiltViewModel
+class UserSigninViewModel @Inject constructor(
+    private val authRepository: FirebaseAuthenticator
+) : ViewModel() {
 
     private var _state = MutableStateFlow(UserSigninData())
     val state = _state.asStateFlow().stateIn(
@@ -43,20 +49,26 @@ class UserSigninViewModel : ViewModel() {
     private fun onSubmitButtonClick() {
         viewModelScope.launch {
             try {
-//                authRepository.signInWithEmailPassword(
-//                    state.value.email,
-//                    state.value.password
-//                )
+                authRepository.signInWithEmailPassword(
+                    state.value.email,
+                    state.value.password
+                )
+
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
+                _state.update { state ->
+                    state.copy(
+                        navigationApproval = true
+                    )
+                }
+                //User1@gmail.com
+                //Filmmaker2004#
                 Log.d("SignIn","Success")
             }
             catch (e : Exception){
                 SnackBarController.sendEvent(SnackBarEvent(message = "Email and password not match"))
                 Log.e("SignIn",e.message.toString())
             }
-
         }
-
     }
 
     private fun onPassword(password: String) {
