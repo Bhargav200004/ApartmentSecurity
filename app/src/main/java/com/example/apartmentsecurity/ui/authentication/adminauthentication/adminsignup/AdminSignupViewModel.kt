@@ -4,8 +4,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
-import com.example.apartmentsecurity.data.db.FirebaseFireStoreImpl
 import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.AdminData
@@ -17,7 +15,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -46,7 +43,8 @@ class AdminSignupViewModel @Inject constructor(
             is AdminSignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)
             is AdminSignupEvent.OnLastNameChange -> onLastNameChange(event.lName)
             is AdminSignupEvent.OnEmailChange -> onEmailNameChange(event.email)
-            is AdminSignupEvent.OnApartmentNameChange -> onApartNameChange(event.apartmentName)
+            is AdminSignupEvent.OnApartmentNameChange -> onApartmentNameChange(event.apartmentName)
+            is AdminSignupEvent.OnApartmentIdChange -> onApartmentIdChange(event.apartmentId)
             is AdminSignupEvent.OnUserNameChange -> onUserNameChange(event.userName)
             is AdminSignupEvent.OnPasswordChange -> onPasswordChange(event.password)
             is AdminSignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
@@ -56,6 +54,8 @@ class AdminSignupViewModel @Inject constructor(
             AdminSignupEvent.OnErrorChange -> onErrorChange()
         }
     }
+
+
 
     fun onErrorChange() {
         viewModelScope.launch {
@@ -104,8 +104,9 @@ class AdminSignupViewModel @Inject constructor(
                 if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid
                     val apartmentName = state.value.apartmentName
-                    firebaseFireStore.create(
-                        collection = state.value.user?.user?.uid!!,
+//                    userUUID = state.value.user?.user?.uid!!
+                    firebaseFireStore.createAdmin(
+                        collection = state.value.apartmentId,
                         document = state.value.apartmentName,
                         adminData = adminData
                     )
@@ -132,7 +133,7 @@ class AdminSignupViewModel @Inject constructor(
                     )
                 }
                 delay(4000)
-//                createDatabase()
+                createDatabase()
                 _state.update {state ->
                     state.copy(
                         navigationApproval = true
@@ -193,7 +194,6 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
-
     private fun onLastNameChange(lName: String) {
         try {
             viewModelScope.launch {
@@ -207,7 +207,6 @@ class AdminSignupViewModel @Inject constructor(
             Log.e(TAG, "${e.message}")
         }
     }
-
 
     private fun onEmailNameChange(email: String) {
         try {
@@ -223,8 +222,7 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
-
-    private fun onApartNameChange(apartmentName: String) {
+    private fun onApartmentNameChange(apartmentName: String) {
         try {
             viewModelScope.launch {
                 _state.update { state ->
@@ -238,6 +236,19 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
+    private fun onApartmentIdChange(apartmentId: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        apartmentId = apartmentId
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
 
     private fun onUserNameChange(username: String) {
         try {
@@ -253,7 +264,6 @@ class AdminSignupViewModel @Inject constructor(
         }
     }
 
-
     private fun onPasswordChange(password: String) {
         try {
             viewModelScope.launch {
@@ -267,7 +277,6 @@ class AdminSignupViewModel @Inject constructor(
             Log.e(TAG, "${e.message}")
         }
     }
-
 
     private fun onConfirmPasswordChange(confirmPassword: String) {
         try {

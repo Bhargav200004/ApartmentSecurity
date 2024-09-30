@@ -9,6 +9,8 @@ sealed class AdminSignupEvent {
 
     data class OnApartmentNameChange(val apartmentName : String) : AdminSignupEvent()
 
+    data class OnApartmentIdChange(val apartmentId : String) : AdminSignupEvent()
+
     data class OnUserNameChange(val userName : String) : AdminSignupEvent()
 
     data class OnPasswordChange(val password : String) :  AdminSignupEvent()

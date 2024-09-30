@@ -18,3 +18,7 @@ suspend fun <T> Task<T>.await(): T {
         }
     }
 }
+
+const val SECURITY_GUARD = "SecurityGuard"
+
+const val APARTMENT_HOUSE_NO = "ApartmentHouseNo"

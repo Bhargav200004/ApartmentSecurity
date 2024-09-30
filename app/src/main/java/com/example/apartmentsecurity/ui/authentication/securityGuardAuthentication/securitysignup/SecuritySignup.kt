@@ -119,6 +119,12 @@ private fun SignupFormSection(
         )
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
+            value = state.apartmentId,
+            onValueChange = { onEvent(SecuritySignupEvent.OnApartmentIdChange(it)) },
+            supportingText = "APARTMENT UNIQUE ID"
+        )
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
             value = state.userName,
             onValueChange = { onEvent(SecuritySignupEvent.OnUserNameChange(it)) },
             supportingText = "USERNAME"

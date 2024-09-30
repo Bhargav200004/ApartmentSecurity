@@ -4,7 +4,10 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
+import com.example.apartmentsecurity.domain.model.SecurityData
+import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import com.example.apartmentsecurity.util.ValidationResult
@@ -21,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SecuritySignupViewModel @Inject constructor(
-    private val authRepository: FirebaseAuthenticator
+    private val authRepository: FirebaseAuthenticator,
+    private val firebaseFireStore: FireStore,
 ): ViewModel() {
 
     private var _state = MutableStateFlow(SecuritySignupData())
@@ -37,7 +41,8 @@ class SecuritySignupViewModel @Inject constructor(
             is SecuritySignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)
             is SecuritySignupEvent.OnLastNameChange -> onLastNameChange(event.lName)
             is SecuritySignupEvent.OnEmailChange -> onEmailNameChange(event.email)
-            is SecuritySignupEvent.OnApartmentNameChange -> onApartNameChange(event.apartmentName)
+            is SecuritySignupEvent.OnApartmentNameChange -> onApartmentNameChange(event.apartmentName)
+            is SecuritySignupEvent.OnApartmentIdChange -> onApartmentIdChange(event.apartmentId)
             is SecuritySignupEvent.OnUserNameChange -> onUserNameChange(event.userName)
             is SecuritySignupEvent.OnPasswordChange -> onPasswordChange(event.password)
             is SecuritySignupEvent.OnConfirmPasswordChange -> onConfirmPasswordChange(event.confirmPassword)
@@ -47,6 +52,8 @@ class SecuritySignupViewModel @Inject constructor(
             SecuritySignupEvent.OnSubmitClick -> onSubmitButtonClick()
         }
     }
+
+
 
 
     private fun onSubmitButtonClick() {
@@ -84,7 +91,7 @@ class SecuritySignupViewModel @Inject constructor(
                     )
                 }
                 delay(4000)
-//                createDatabase()
+                createDatabase()
                 //Security1@gmail.com
                 //Filmmaker2004#
                 _state.update {state ->
@@ -100,6 +107,35 @@ class SecuritySignupViewModel @Inject constructor(
                     )
                 }
                 Log.e("errorMessage" , "${e.message}" )
+            }
+        }
+    }
+
+    private fun createDatabase() {
+        viewModelScope.launch {
+            try {
+                val securityData  = SecurityData(
+                    fName = state.value.firstName,
+                    lName = state.value.lastName,
+                    userName = state.value.userName
+                )
+                if ( state.value.user?.user?.uid != null){
+                    val user = authRepository.getUser()!!.uid
+                    val apartmentName = state.value.apartmentName
+                    firebaseFireStore.createSecurity(
+                        collection = state.value.apartmentId,
+                        document = state.value.apartmentName,
+                        securityUserName = state.value.userName,
+                        securityData = securityData
+                    )
+                    Log.d("Checkingerror" , "user are registered number $user , $apartmentName")
+                }
+                else{
+                    Log.d("Checkingerror" , "user are not registered number")
+                }
+
+            }catch (e : Exception){
+                Log.e("Checkingerror" , e.message.toString())
             }
         }
     }
@@ -150,12 +186,26 @@ class SecuritySignupViewModel @Inject constructor(
         }
     }
 
-    private fun onApartNameChange(apartmentName: String) {
+    private fun onApartmentNameChange(apartmentName: String) {
         try {
             viewModelScope.launch {
                 _state.update { state ->
                     state.copy(
                         apartmentName = apartmentName
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "${e.message}")
+        }
+    }
+
+    private fun onApartmentIdChange(apartmentId: String) {
+        try {
+            viewModelScope.launch {
+                _state.update { state ->
+                    state.copy(
+                        apartmentId = apartmentId
                     )
                 }
             }

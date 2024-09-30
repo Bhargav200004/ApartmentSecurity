@@ -7,6 +7,7 @@ data class SecuritySignupData(
     val lastName : String = "",
     val email : String = "",
     val apartmentName : String = "",
+    val apartmentId : String = "",
     val userName : String = "",
     val password : String = "",
     val confirmPassword : String = "",

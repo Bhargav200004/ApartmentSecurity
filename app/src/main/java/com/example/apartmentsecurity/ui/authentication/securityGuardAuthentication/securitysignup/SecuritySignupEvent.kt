@@ -10,6 +10,8 @@ sealed class SecuritySignupEvent {
 
     data class OnApartmentNameChange(val apartmentName : String) : SecuritySignupEvent()
 
+    data class OnApartmentIdChange(val apartmentId : String) : SecuritySignupEvent()
+
     data class OnUserNameChange(val userName : String) : SecuritySignupEvent()
 
     data class OnPasswordChange(val password : String) :  SecuritySignupEvent()

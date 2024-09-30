@@ -8,6 +8,7 @@ data class UserSignupData(
     val lastName : String = "",
     val email : String = "",
     val apartmentName : String = "",
+    val apartmentId : String = "",
     val userName : String = "",
     val roomNo : String = "",
     val password : String = "",

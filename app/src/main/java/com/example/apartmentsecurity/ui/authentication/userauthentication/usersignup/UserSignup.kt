@@ -121,6 +121,12 @@ private fun SignupFormSection(
             onValueChange = { onEvent(UserSignupEvent.OnApartmentNameChange(it)) },
             supportingText = "APARTMENT NAME"
         )
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.apartmentId,
+            onValueChange = { onEvent(UserSignupEvent.OnApartmentIdChange(it)) },
+            supportingText = "APARTMENT UNIQUE ID"
+        )
         UserTwoInputSection(
             userName = state.userName,
             roomNo = state.roomNo,

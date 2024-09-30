@@ -12,6 +12,8 @@ sealed class UserSignupEvent {
 
     data class OnApartmentNameChange(val apartmentName : String) : UserSignupEvent()
 
+    data class OnApartmentIdChange(val apartmentId : String) : UserSignupEvent()
+
     data class OnUserNameChange(val userName : String) : UserSignupEvent()
 
     data class OnUserRoomNoChange(val roomNo : String) : UserSignupEvent()
