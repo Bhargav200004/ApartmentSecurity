@@ -1,57 +1,58 @@
 package com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen
 
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Person3
 import androidx.compose.material.icons.outlined.Room
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.apartmentsecurity.R
+import com.example.apartmentsecurity.ui.workingScreen.component.BottomSheet
+import com.example.apartmentsecurity.ui.workingScreen.component.DialogWithMessage
+import com.example.apartmentsecurity.ui.workingScreen.component.SecurityGuardScreenTextField
+import com.example.apartmentsecurity.util.SnackBarController
+import com.example.apartmentsecurity.util.SnackBarEvent
+import com.example.apartmentsecurity.util.getBitmapFromVectorDrawable
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun SecurityGuardScreen() {
@@ -68,6 +69,32 @@ fun SecurityGuardScreen() {
 
         val uiState by viewModel.state.collectAsStateWithLifecycle()
 
+        val scope = rememberCoroutineScope()
+
+
+
+
+        val cameraLaunch = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicturePreview(),
+            onResult = {
+                viewModel.onEvent(SecurityGuardScreenEvent.OnPictureChange(it))
+                Log.d("TAG", "CameraLearning: $it")
+            }
+        )
+
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGrant ->
+                if (isGrant) {
+                    cameraLaunch.launch(null)
+                } else {
+                    scope.launch {
+                        SnackBarController.sendEvent(SnackBarEvent(message = "Camera permission Denied \n Please allow at setting"))
+                    }
+                }
+            }
+        )
+
 
         Column(
             modifier = Modifier
@@ -80,96 +107,50 @@ fun SecurityGuardScreen() {
             if (uiState.showModalBottomSheet)
                 BottomSheet(uiState = uiState, onEvent = viewModel::onEvent)
 
-            Image(
-                painter = painterResource(id = R.drawable.camera),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .clickable {
-
-                    }
-                    .size(200.dp)
-                    .border(
-                        BorderStroke(
-                            width = 3.dp,
-                            color = MaterialTheme.colorScheme.primary
-                        ),
-                        RoundedCornerShape(16.dp)
-                    )
-                    .clip(RoundedCornerShape(16.dp))
-            )
+            PhotoSelect(uiState, launcher)
 
             SecurityGuardForm(
                 uiState = uiState,
                 onEvent = viewModel::onEvent
             )
 
-            DialogWithImage(
-                onDismissRequest = {},
-                onConfirmation = {},
-                value = "asdfa",
-                onValueChange = {}
-            )
-
 
         }
     }
 }
-
 
 @Composable
-fun DialogWithImage(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    value: String,
-    onValueChange: (String) -> Unit,
+private fun PhotoSelect(
+    uiState: SecurityGuardScreenData,
+    launcher: ManagedActivityResultLauncher<String, Boolean>,
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = "OTHER",
-                    modifier = Modifier.padding(16.dp),
-                )
-                OutlinedTextField(
-                    value = value,
-                    onValueChange = { onValueChange(it) },
-                    shape = RoundedCornerShape(12.dp),
-                    label = { Text(text = "Reason") }
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    TextButton(
-                        onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp),
-                    ) {
-                        Text("Dismiss")
-                    }
-                    TextButton(
-                        onClick = { onConfirmation() },
-                        modifier = Modifier.padding(8.dp),
-                    ) {
-                        Text("Confirm")
-                    }
-                }
+    Image(
+        bitmap = if (uiState.pictureBitmap != null) {
+            uiState.pictureBitmap.asImageBitmap()
+        } else {
+            getBitmapFromVectorDrawable(
+                LocalContext.current, R.drawable.outline_person_24
+            ).asImageBitmap()
+        },
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .clickable {
+                launcher.launch(android.Manifest.permission.CAMERA)
             }
-        }
-    }
+            .size(200.dp)
+            .border(
+                BorderStroke(
+                    width = 3.dp,
+                    color = MaterialTheme.colorScheme.primary
+                ),
+                RoundedCornerShape(16.dp)
+            )
+            .clip(RoundedCornerShape(16.dp))
+    )
 }
+
+
 
 
 @Composable
@@ -214,93 +195,28 @@ private fun SecurityGuardForm(
     ) {
         Text(text = uiState.reason)
     }
-
-
-}
-
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun BottomSheet(
-    uiState: SecurityGuardScreenData,
-    onEvent: (SecurityGuardScreenEvent) -> Unit
-) {
-
-    val sheetState = rememberModalBottomSheetState()
-
-    ModalBottomSheet(
-        onDismissRequest = { onEvent(SecurityGuardScreenEvent.OnBottomSheetDismissClick) },
-        sheetState = sheetState
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(uiState.reasonList) { reason ->
-                BottomButton(
-                    reason = reason,
-                    onReasonChange = {
-                        onEvent(SecurityGuardScreenEvent.OnReasonChange(reason))
-                        onEvent(SecurityGuardScreenEvent.OnBottomSheetDismissClick)
-                    }
-                )
+    if (uiState.showDialog) {
+        DialogWithMessage(
+            onDismissRequest = { onEvent(SecurityGuardScreenEvent.OnDialogDismissClick) },
+            onConfirmation = {
+                onEvent(SecurityGuardScreenEvent.OnDialogConfirmClick)
+            },
+            value = uiState.other,
+            onValueChange = {
+                onEvent(SecurityGuardScreenEvent.OnOtherChange(it))
             }
-        }
-
+        )
     }
-}
-
-@Composable
-private fun BottomButton(
-    reason : String,
-    onReasonChange: () -> Unit
-) {
     OutlinedButton(
+        onClick = {onEvent(SecurityGuardScreenEvent.OnSubmit)},
         modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        onClick = {
-            onReasonChange()
-        }
+            .fillMaxWidth()
+            .height(52.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Text(text = reason)
-
+        Text(text = "Submit")
     }
 }
-
-
-@Composable
-fun SecurityGuardScreenTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    leadingIcon: ImageVector,
-    placeholder: String,
-    imeAction: ImeAction = ImeAction.Next,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth(),
-        value = value,
-        onValueChange = { onValueChange(it) },
-        leadingIcon = {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null
-            )
-        },
-        placeholder = { Text(text = placeholder) },
-        shape = RoundedCornerShape(12.dp),
-        keyboardOptions = KeyboardOptions(
-            imeAction = imeAction,
-            keyboardType = keyboardType
-        ),
-    )
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

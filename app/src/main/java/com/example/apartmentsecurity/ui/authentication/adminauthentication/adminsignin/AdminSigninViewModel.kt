@@ -3,6 +3,8 @@ package com.example.apartmentsecurity.ui.authentication.adminauthentication.admi
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.AuthenticationType
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.data.authentication.FirebaseAuthenticatorImpl
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AdminSigninViewModel @Inject constructor(
-    private val authRepository: FirebaseAuthenticatorImpl
+    private val authRepository: FirebaseAuthenticatorImpl,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ): ViewModel() {
 
     private var _state = MutableStateFlow(AdminSigninData())
@@ -53,7 +56,7 @@ class AdminSigninViewModel @Inject constructor(
                     state.value.email,
                     state.value.password
                 )
-
+                storingDataInThePhone()
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
                 _state.update { state ->
                     state.copy(
@@ -69,6 +72,14 @@ class AdminSigninViewModel @Inject constructor(
                 Log.e("SignIn",e.message.toString())
             }
 
+        }
+    }
+
+    private suspend fun storingDataInThePhone() {
+        viewModelScope.launch {
+            mySharedPreferenceDataStore.onSendAuthenticationType(
+                authenticationType = AuthenticationType.ADMIN.name
+            )
         }
     }
 

@@ -5,6 +5,7 @@ import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
+import com.example.apartmentsecurity.domain.model.VisitorData
 import com.example.apartmentsecurity.util.APARTMENT_HOUSE_NO
 import com.example.apartmentsecurity.util.SECURITY_GUARD
 import com.example.apartmentsecurity.util.await
@@ -43,6 +44,14 @@ class FirebaseFireStoreImpl @Inject constructor(
     ) {
         val userRef = db.collection(collection).document(document).collection(SECURITY_GUARD)
         userRef.document(securityUserName).set(securityData).await()
+    }
+
+    override suspend fun sendSecurityData(
+        reference : String,
+        roomNo: String,
+        visitorData: VisitorData
+    ) {
+        TODO("Not yet implemented")
     }
 
 

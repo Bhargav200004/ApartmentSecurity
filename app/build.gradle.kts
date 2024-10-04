@@ -94,7 +94,13 @@ dependencies {
     //Serialization
     implementation(libs.kotlinx.serialization.json)
 
+    //Constraint layout
     implementation(libs.constraintlayout)
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
 
 
 }

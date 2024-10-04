@@ -1,7 +1,10 @@
 package com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.util.SnackBarController
+import com.example.apartmentsecurity.util.SnackBarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,14 +35,26 @@ class SecurityGuardScreenViewModel @Inject constructor(
             is SecurityGuardScreenEvent.OnVehicleNumberChange -> onVehicleNumberChange(event.vehicleNumber)
             is SecurityGuardScreenEvent.OnRoomNumberChange -> onRoomNumberChange(event.roomNumber)
             is SecurityGuardScreenEvent.OnReasonChange -> onReasonChange(event.reason)
-            SecurityGuardScreenEvent.OnSubmit -> TODO()
+            is SecurityGuardScreenEvent.OnOtherChange -> onOtherChange(event.other)
+            is SecurityGuardScreenEvent.OnPictureChange -> onPictureChange(event.picture)
+            SecurityGuardScreenEvent.OnDialogConfirmClick -> onDialogConfirmClick()
+            SecurityGuardScreenEvent.OnDialogDismissClick -> onDialogDismissClick()
+            SecurityGuardScreenEvent.OnSubmit -> onSubmitButtonClick()
             is SecurityGuardScreenEvent.OnBottomSheetInputClick -> onBottomSheetInputClick()
             SecurityGuardScreenEvent.OnBottomSheetClick -> onBottomSheetClick()
             SecurityGuardScreenEvent.OnBottomSheetDismissClick -> onBottomSheetDismissClick()
         }
     }
 
+    private fun onSubmitButtonClick() {
+        viewModelScope.launch {
+            try{
 
+            }catch (e : Exception){
+                SnackBarController.sendEvent(SnackBarEvent(message = "Something went ${e.message}"))
+            }
+        }
+    }
 
 
     private fun onNameChange(name: String) {
@@ -87,6 +102,61 @@ class SecurityGuardScreenViewModel @Inject constructor(
             _state.update { state ->
                 state.copy(
                     reason = reason
+                )
+            }
+            if (reason == "Other"){
+                _state.update {state->
+                    state.copy(
+                        showDialog = true
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onOtherChange(other: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    other = other
+                )
+            }
+        }
+    }
+
+    private fun onPictureChange(picture: Bitmap?) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    pictureBitmap = picture
+                )
+            }
+        }
+    }
+
+    private fun onDialogConfirmClick() {
+        viewModelScope.launch {
+            if (state.value.other.isNotEmpty()) {
+                _state.update { state ->
+                    state.copy(
+                        reason = state.other,
+                        showDialog = false,
+                        other = ""
+                    )
+                }
+            } else {
+                SnackBarController.sendEvent(SnackBarEvent(message = "Reason is Empty"))
+            }
+        }
+    }
+
+    private fun onDialogDismissClick() {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    showDialog = false,
+                    reason = SecurityGuardScreenData.Companion.Reason.DELIVERY.value,
+                    other = ""
                 )
             }
         }

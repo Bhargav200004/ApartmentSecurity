@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.AdminData
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class AdminSignupViewModel @Inject constructor(
     private val authRepository : FirebaseAuthenticator,
     private val firebaseFireStore: FireStore,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(AdminSignupData())
@@ -99,7 +101,9 @@ class AdminSignupViewModel @Inject constructor(
                 val adminData = AdminData(
                     fName = state.value.firstName,
                     lName = state.value.lastName,
-                    userName = state.value.userName
+                    userName = state.value.userName,
+                    apartmentName = state.value.apartmentName,
+                    apartmentId = state.value.apartmentId
                 )
                 if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid
@@ -133,6 +137,7 @@ class AdminSignupViewModel @Inject constructor(
                     )
                 }
                 delay(4000)
+                storingDataInThePhone()
                 createDatabase()
                 _state.update {state ->
                     state.copy(
@@ -150,7 +155,17 @@ class AdminSignupViewModel @Inject constructor(
             }
         }
     }
-    
+
+    private suspend fun storingDataInThePhone() {
+        viewModelScope.launch {
+            mySharedPreferenceDataStore.onSend(
+                name = state.value.firstName,
+                apartmentId = state.value.apartmentId,
+                apartmentName = state.value.apartmentName,
+            )
+        }
+    }
+
     private fun onPasswordVisibleChange(passwordVisible: Boolean) {
         try {
             viewModelScope.launch {

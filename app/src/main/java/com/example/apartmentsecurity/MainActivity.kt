@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
 import com.example.apartmentsecurity.ui.navigation.AppNavigation
 import com.example.apartmentsecurity.ui.theme.ApartmentSecurityTheme
 import com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen.SecurityGuardScreen
@@ -80,11 +81,11 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(paddingValues = innerPadding)
                     ) {
-//                        UserSignin()
-//                        MainScreen()
-//                        AppNavigation()
 
-                        SecurityGuardScreen()
+//                        MainScreen()
+                        AppNavigation()
+
+//                        SecurityGuardScreen()
 
                     }
                 }
