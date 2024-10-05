@@ -85,7 +85,7 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                         },
                     text = "admin",
                     onSubmitClick = {
-                        if((authenticationType == AuthenticationType.ADMIN.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                        if((authenticationType == AuthenticationType.ADMIN.name) && (authenticationType != AuthenticationType.UNAUTHENTICATED.name))
                             navController.navigate(AdminScreen.Admin)
                         else
                             navController.navigate(AuthScreen.AdminAuth)
@@ -100,7 +100,7 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                         },
                     text = "user",
                     onSubmitClick = {
-                        if((authenticationType == AuthenticationType.USER.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                        if((authenticationType == AuthenticationType.USER.name) && (authenticationType != AuthenticationType.UNAUTHENTICATED.name))
                             navController.navigate(UserScreen.User)
                         else
                             navController.navigate(AuthScreen.UserAuth) }
@@ -114,7 +114,7 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                         },
                     text = "securityGuard",
                     onSubmitClick = {
-                        if((authenticationType == AuthenticationType.SECURITY.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                        if((authenticationType == AuthenticationType.SECURITY.name) && (authenticationType != AuthenticationType.UNAUTHENTICATED.name))
                             navController.navigate(SecurityScreen.Security)
                         else
                             navController.navigate(AuthScreen.SecurityAuth)
