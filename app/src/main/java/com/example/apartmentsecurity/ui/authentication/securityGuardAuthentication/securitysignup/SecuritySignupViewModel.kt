@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.SecurityData
@@ -26,6 +27,7 @@ import javax.inject.Inject
 class SecuritySignupViewModel @Inject constructor(
     private val authRepository: FirebaseAuthenticator,
     private val firebaseFireStore: FireStore,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ): ViewModel() {
 
     private var _state = MutableStateFlow(SecuritySignupData())
@@ -91,7 +93,8 @@ class SecuritySignupViewModel @Inject constructor(
                     )
                 }
                 delay(4000)
-                createDatabase()
+                storingDataInThePhone()
+//                createDatabase()
                 //Security1@gmail.com
                 //Filmmaker2004#
                 _state.update {state ->
@@ -137,6 +140,16 @@ class SecuritySignupViewModel @Inject constructor(
             }catch (e : Exception){
                 Log.e("Checkingerror" , e.message.toString())
             }
+        }
+    }
+
+    private suspend fun storingDataInThePhone() {
+        viewModelScope.launch {
+            mySharedPreferenceDataStore.onSend(
+                name = state.value.firstName,
+                apartmentId = state.value.apartmentId,
+                apartmentName = state.value.apartmentName,
+            )
         }
     }
 

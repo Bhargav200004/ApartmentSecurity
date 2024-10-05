@@ -5,19 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apartmentsecurity.AuthenticationType
 import com.example.apartmentsecurity.MySharedPreferenceDataStore
-import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AppNavigationViewModel@Inject constructor(
+class MainScreenViewModel@Inject constructor(
     private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
@@ -47,7 +45,4 @@ class AppNavigationViewModel@Inject constructor(
             }
         }
     }
-
-
-
 }

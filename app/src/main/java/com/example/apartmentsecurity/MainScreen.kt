@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -16,16 +17,26 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
+import com.example.apartmentsecurity.ui.navigation.AdminScreen
 import com.example.apartmentsecurity.ui.navigation.AuthScreen
+import com.example.apartmentsecurity.ui.navigation.MainScreenViewModel
+import com.example.apartmentsecurity.ui.navigation.SecurityScreen
+import com.example.apartmentsecurity.ui.navigation.UserScreen
 
 @Composable
 fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
 
     val height = LocalConfiguration.current.screenHeightDp.dp
     val width = LocalConfiguration.current.screenWidthDp.dp
+
+    val viewModel: MainScreenViewModel = hiltViewModel()
+
+    val authenticationType by viewModel.state.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -73,7 +84,12 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                             end.linkTo(parent.end, margin = 150.dp)
                         },
                     text = "admin",
-                    onSubmitClick = { navController.navigate(AuthScreen.AdminAuth) }
+                    onSubmitClick = {
+                        if((authenticationType == AuthenticationType.ADMIN.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                            navController.navigate(AdminScreen.Admin)
+                        else
+                            navController.navigate(AuthScreen.AdminAuth)
+                    }
                 )
                 SubmitButton(
                     modifier = Modifier
@@ -83,7 +99,11 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                             end.linkTo(parent.end, margin = 85.dp)
                         },
                     text = "user",
-                    onSubmitClick = { navController.navigate(AuthScreen.UserAuth) }
+                    onSubmitClick = {
+                        if((authenticationType == AuthenticationType.USER.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                            navController.navigate(UserScreen.User)
+                        else
+                            navController.navigate(AuthScreen.UserAuth) }
                 )
                 SubmitButton(
                     modifier = Modifier
@@ -93,7 +113,12 @@ fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
                             end.linkTo(parent.end, margin = 10.dp)
                         },
                     text = "securityGuard",
-                    onSubmitClick = { navController.navigate(AuthScreen.SecurityAuth) }
+                    onSubmitClick = {
+                        if((authenticationType == AuthenticationType.SECURITY.name) ||(authenticationType == AuthenticationType.UNAUTHENTICATED.name))
+                            navController.navigate(SecurityScreen.Security)
+                        else
+                            navController.navigate(AuthScreen.SecurityAuth)
+                    }
                 )
 
             }

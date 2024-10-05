@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.UserData
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class UserSignupViewModel @Inject constructor(
     private val authRepository : FirebaseAuthenticator,
     private val firebaseFireStore: FireStore,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(UserSignupData())
@@ -120,7 +122,8 @@ class UserSignupViewModel @Inject constructor(
                     )
                 }
                 delay(4000)
-                createDatabase()
+                storingDataInThePhone()
+//                createDatabase()
                 _state.update {state ->
                     state.copy(
                         navigationApproval = true
@@ -148,6 +151,20 @@ class UserSignupViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun storingDataInThePhone() {
+        viewModelScope.launch {
+            mySharedPreferenceDataStore.onSend(
+                name = state.value.firstName,
+                apartmentId = state.value.apartmentId,
+                apartmentName = state.value.apartmentName,
+            )
+            mySharedPreferenceDataStore.onSendRoomNumber(
+                roomNumber = state.value.roomNo
+            )
+        }
+    }
+
 
     private fun onRoomNoChange(roomNo: String) {
         viewModelScope.launch {

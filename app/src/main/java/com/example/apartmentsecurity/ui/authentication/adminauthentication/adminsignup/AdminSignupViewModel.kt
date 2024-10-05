@@ -36,10 +36,6 @@ class AdminSignupViewModel @Inject constructor(
         initialValue = AdminSignupData()
     )
 
-
-
-
-
     fun onEvent(event: AdminSignupEvent) {
         when (event) {
             is AdminSignupEvent.OnFirstNameChange -> onFirstNameChange(event.fName)
@@ -56,8 +52,6 @@ class AdminSignupViewModel @Inject constructor(
             AdminSignupEvent.OnErrorChange -> onErrorChange()
         }
     }
-
-
 
     fun onErrorChange() {
         viewModelScope.launch {
@@ -138,7 +132,7 @@ class AdminSignupViewModel @Inject constructor(
                 }
                 delay(4000)
                 storingDataInThePhone()
-                createDatabase()
+//                createDatabase()
                 _state.update {state ->
                     state.copy(
                         navigationApproval = true

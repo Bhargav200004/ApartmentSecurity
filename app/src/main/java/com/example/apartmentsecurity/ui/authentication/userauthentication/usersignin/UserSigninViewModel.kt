@@ -3,6 +3,8 @@ package com.example.apartmentsecurity.ui.authentication.userauthentication.users
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.AuthenticationType
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserSigninViewModel @Inject constructor(
-    private val authRepository: FirebaseAuthenticator
+    private val authRepository: FirebaseAuthenticator,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(UserSigninData())
@@ -53,7 +56,7 @@ class UserSigninViewModel @Inject constructor(
                     state.value.email,
                     state.value.password
                 )
-
+                storingDataInThePhone()
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully Login"))
                 _state.update { state ->
                     state.copy(
@@ -68,6 +71,14 @@ class UserSigninViewModel @Inject constructor(
                 SnackBarController.sendEvent(SnackBarEvent(message = "Email and password not match"))
                 Log.e("SignIn",e.message.toString())
             }
+        }
+    }
+
+    private suspend fun storingDataInThePhone() {
+        viewModelScope.launch {
+            mySharedPreferenceDataStore.onSendAuthenticationType(
+                authenticationType = AuthenticationType.USER.name
+            )
         }
     }
 
