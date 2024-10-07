@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -74,6 +75,18 @@ class MySharedPreferenceDataStore @Inject constructor(
             )
 
         }
+
+    suspend fun getApartmentName(): String {
+        return preferenceDataFlow.map {
+            it.apartmentName
+        }.first()
+    }
+
+    suspend fun getApartmentId(): String {
+        return preferenceDataFlow.map {
+            it.apartmentId
+        }.first()
+    }
 
     suspend fun onSend(name: String , apartmentId: String , apartmentName: String){
             myPreferenceDataStore.edit {

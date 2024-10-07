@@ -44,7 +44,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.apartmentsecurity.R
+import com.example.apartmentsecurity.ui.navigation.AppScreen
 import com.example.apartmentsecurity.ui.workingScreen.component.BottomSheet
 import com.example.apartmentsecurity.ui.workingScreen.component.DialogWithMessage
 import com.example.apartmentsecurity.ui.workingScreen.component.SecurityGuardScreenTextField
@@ -55,12 +57,12 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun SecurityGuardScreen() {
+fun SecurityGuardScreen(navController: NavController) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-            SecurityGuardScreenTopBar()
+            SecurityGuardScreenTopBar(navController = navController)
         }
     ) { paddingValues ->
 
@@ -113,8 +115,6 @@ fun SecurityGuardScreen() {
                 uiState = uiState,
                 onEvent = viewModel::onEvent
             )
-
-
         }
     }
 }
@@ -220,13 +220,15 @@ private fun SecurityGuardForm(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecurityGuardScreenTopBar() {
+fun SecurityGuardScreenTopBar(navController: NavController) {
     CenterAlignedTopAppBar(
         title = {
             Text(text = "Visitor Information")
         },
         navigationIcon = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                navController.navigate(route = AppScreen.MainScreen)
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null

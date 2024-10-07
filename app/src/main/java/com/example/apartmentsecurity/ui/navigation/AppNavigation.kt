@@ -2,9 +2,6 @@ package com.example.apartmentsecurity.ui.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -16,6 +13,7 @@ import com.example.apartmentsecurity.ui.authentication.securityGuardAuthenticati
 import com.example.apartmentsecurity.ui.authentication.securityGuardAuthentication.securitysignup.SecuritySignup
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignup.UserSignup
+import com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen.SecurityGuardScreen
 
 
 @Composable
@@ -62,7 +60,7 @@ fun AppNavigation() {
                 SecuritySignin(navController =  navHostController)
             }
             composable<SecurityScreen.Security> {
-                Text("Security Screen")
+                SecurityGuardScreen(navController =  navHostController)
             }
         }
 

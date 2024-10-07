@@ -9,6 +9,8 @@ data class SecurityGuardScreenData(
     val roomNumber : String = "",
     val reason: String = Reason.DELIVERY.value,
     val other : String = "",
+    val apartmentName : String = "",
+    val apartmentId : String = "",
     val pictureBitmap: Bitmap? = null,
     val reasonList : List<String> = getListOfReason(),
     val showModalBottomSheet : Boolean = false,

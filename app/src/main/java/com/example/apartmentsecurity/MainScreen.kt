@@ -20,7 +20,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.SubmitButton
 import com.example.apartmentsecurity.ui.navigation.AdminScreen
 import com.example.apartmentsecurity.ui.navigation.AuthScreen
@@ -29,7 +28,7 @@ import com.example.apartmentsecurity.ui.navigation.SecurityScreen
 import com.example.apartmentsecurity.ui.navigation.UserScreen
 
 @Composable
-fun MainScreen( modifier: Modifier = Modifier , navController: NavController ) {
+fun MainScreen(navController: NavController ) {
 
     val height = LocalConfiguration.current.screenHeightDp.dp
     val width = LocalConfiguration.current.screenWidthDp.dp

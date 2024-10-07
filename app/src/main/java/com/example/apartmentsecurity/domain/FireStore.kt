@@ -4,7 +4,7 @@ import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.domain.model.VisitorData
-import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.QuerySnapshot
 
 interface FireStore {
 
@@ -14,6 +14,6 @@ interface FireStore {
 
     suspend fun createSecurity(collection : String, document : String ,securityUserName: String ,securityData: SecurityData)
 
-    suspend fun sendSecurityData(reference : String, roomNo: String , visitorData: VisitorData)
+    suspend fun sendVisitorData(apartmentId: String,apartmentName: String,timeStampId : String,visitorData: VisitorData)
 }
 

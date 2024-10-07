@@ -87,7 +87,9 @@ class UserSignupViewModel @Inject constructor(
                 val userData = UserData(
                     fName = state.value.firstName,
                     lName = state.value.lastName,
-                    userName = state.value.userName
+                    userName = state.value.userName,
+                    apartmentId = state.value.apartmentId,
+                    apartmentName = state.value.apartmentName
                 )
                 if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid
@@ -123,7 +125,7 @@ class UserSignupViewModel @Inject constructor(
                 }
                 delay(4000)
                 storingDataInThePhone()
-//                createDatabase()
+                createDatabase()
                 _state.update {state ->
                     state.copy(
                         navigationApproval = true

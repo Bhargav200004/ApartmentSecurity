@@ -94,7 +94,7 @@ class SecuritySignupViewModel @Inject constructor(
                 }
                 delay(4000)
                 storingDataInThePhone()
-//                createDatabase()
+                createDatabase()
                 //Security1@gmail.com
                 //Filmmaker2004#
                 _state.update {state ->
@@ -120,7 +120,9 @@ class SecuritySignupViewModel @Inject constructor(
                 val securityData  = SecurityData(
                     fName = state.value.firstName,
                     lName = state.value.lastName,
-                    userName = state.value.userName
+                    userName = state.value.userName,
+                    apartmentId = state.value.apartmentId,
+                    apartmentName = state.value.apartmentName
                 )
                 if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid

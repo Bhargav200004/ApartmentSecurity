@@ -34,6 +34,7 @@ import com.example.apartmentsecurity.ui.authentication.userauthentication.usersi
 import com.example.apartmentsecurity.ui.navigation.AppNavigation
 import com.example.apartmentsecurity.ui.theme.ApartmentSecurityTheme
 import com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen.SecurityGuardScreen
+import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreen
 import com.example.apartmentsecurity.util.ObserverAsEvents
 import com.example.apartmentsecurity.util.SnackBarController
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +84,8 @@ class MainActivity : ComponentActivity() {
                     ) {
 
 //                        MainScreen()
-                        AppNavigation()
+//                        AppNavigation()
+                        UserScreen()
 
 //                        SecurityGuardScreen()
 

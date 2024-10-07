@@ -132,7 +132,7 @@ class AdminSignupViewModel @Inject constructor(
                 }
                 delay(4000)
                 storingDataInThePhone()
-//                createDatabase()
+                createDatabase()
                 _state.update {state ->
                     state.copy(
                         navigationApproval = true
