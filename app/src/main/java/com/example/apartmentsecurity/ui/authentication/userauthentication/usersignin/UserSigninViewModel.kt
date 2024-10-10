@@ -32,22 +32,18 @@ class UserSigninViewModel @Inject constructor(
 
     fun onEvent(event : UserSigninEvent){
         when(event){
+            is UserSigninEvent.OnApartmentIdChange -> onApartmentIdChange(event.apartmentId)
+            is UserSigninEvent.OnApartmentNameChange -> onApartmentNameChange(event.apartmentName)
+            is UserSigninEvent.OnUserNameChange -> onUserNameChange(event.userName)
             is UserSigninEvent.OnEmailChange -> onEmailChange(event.email)
             is UserSigninEvent.OnPasswordChange -> onPassword(event.password)
             is UserSigninEvent.OnPasswordVisibleChange -> onPasswordVisibleChange(event.show)
             UserSigninEvent.OnSubmitButtonClick -> onSubmitButtonClick()
+
         }
     }
 
-    private fun onPasswordVisibleChange(show: Boolean) {
-        viewModelScope.launch {
-            _state.update {state ->
-                state.copy(
-                    passwordVisible = !show
-                )
-            }
-        }
-    }
+
 
     private fun onSubmitButtonClick() {
         viewModelScope.launch {
@@ -74,10 +70,56 @@ class UserSigninViewModel @Inject constructor(
         }
     }
 
+
+    private fun onUserNameChange(userName: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    userName = userName
+                )
+            }
+        }
+    }
+
+    private fun onApartmentNameChange(apartmentName: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    apartmentName = apartmentName
+                )
+            }
+        }
+    }
+
+    private fun onApartmentIdChange(apartmentId: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    apartmentId = apartmentId
+                )
+            }
+        }
+    }
+
+    private fun onPasswordVisibleChange(show: Boolean) {
+        viewModelScope.launch {
+            _state.update {state ->
+                state.copy(
+                    passwordVisible = !show
+                )
+            }
+        }
+    }
+
     private suspend fun storingDataInThePhone() {
         viewModelScope.launch {
             mySharedPreferenceDataStore.onSendAuthenticationType(
                 authenticationType = AuthenticationType.USER.name
+            )
+            mySharedPreferenceDataStore.onSend(
+                name = state.value.userName,
+                apartmentId = state.value.apartmentId,
+                apartmentName = state.value.apartmentName
             )
         }
     }

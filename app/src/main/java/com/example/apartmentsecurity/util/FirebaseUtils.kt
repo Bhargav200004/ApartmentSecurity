@@ -32,11 +32,11 @@ object FirebaseUtils {
         return formattedDate
     }
 
-    const val SECURITY_GUARD = "SecurityGuard"
+    const val SECURITY_GUARD :  String = "SecurityGuard"
 
-    const val APARTMENT_HOUSE_NO = "ApartmentHouseNo"
+    const val APARTMENT_HOUSE_NO : String = "ApartmentHouseNo"
 
-    const val APARTMENT_DATA = "ApartmentData"
+    const val APARTMENT_DATA : String= "ApartmentData"
 }
 
 

@@ -32,10 +32,46 @@ class SecuritySigninViewModel @Inject constructor(
 
     fun onEvent(event : SecuritySigninEvent){
         when(event){
+            is SecuritySigninEvent.OnApartmentIdChange -> onApartmentIdChange(event.apartmentId)
+            is SecuritySigninEvent.OnApartmentNameChange -> onApartmentNameChange(event.apartmentName)
+            is SecuritySigninEvent.OnUserNameChange -> onUserNameChange(event.userName)
             is SecuritySigninEvent.OnEmailChange -> onEmailChange(event.email)
             is SecuritySigninEvent.OnPasswordChange -> onPassword(event.password)
             is SecuritySigninEvent.OnPasswordVisibleChange -> onPasswordVisibleChange(event.show)
             SecuritySigninEvent.OnSubmitButtonClick -> onSubmitButtonClick()
+        }
+    }
+
+
+
+
+    private fun onApartmentIdChange(apartmentId: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    apartmentId = apartmentId
+                )
+            }
+        }
+    }
+
+    private fun onApartmentNameChange(apartmentName: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    apartmentName = apartmentName
+                )
+            }
+        }
+    }
+
+    private fun onUserNameChange(userName: String) {
+        viewModelScope.launch {
+            _state.update { state ->
+                state.copy(
+                    userName = userName
+                )
+            }
         }
     }
 
@@ -69,6 +105,11 @@ class SecuritySigninViewModel @Inject constructor(
         viewModelScope.launch {
             mySharedPreferenceDataStore.onSendAuthenticationType(
                 authenticationType = AuthenticationType.SECURITY.name
+            )
+            mySharedPreferenceDataStore.onSend(
+                name = state.value.userName,
+                apartmentId = state.value.apartmentId,
+                apartmentName = state.value.apartmentName
             )
         }
     }

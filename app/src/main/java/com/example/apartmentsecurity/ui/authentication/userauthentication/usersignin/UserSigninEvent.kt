@@ -1,8 +1,12 @@
 package com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin
 
-import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninEvent
-
 sealed class UserSigninEvent {
+
+    data class OnApartmentIdChange(val apartmentId : String) : UserSigninEvent()
+
+    data class OnApartmentNameChange(val apartmentName : String) : UserSigninEvent()
+
+    data class OnUserNameChange(val userName : String) : UserSigninEvent()
 
     data class OnEmailChange(val email : String) : UserSigninEvent()
 

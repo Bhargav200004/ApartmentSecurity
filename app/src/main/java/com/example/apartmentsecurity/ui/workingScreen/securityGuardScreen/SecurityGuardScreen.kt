@@ -1,5 +1,6 @@
 package com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen
 
+import android.Manifest
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -109,7 +110,7 @@ fun SecurityGuardScreen(navController: NavController) {
             if (uiState.showModalBottomSheet)
                 BottomSheet(uiState = uiState, onEvent = viewModel::onEvent)
 
-            PhotoSelect(uiState, launcher)
+            PhotoSection(uiState, launcher)
 
             SecurityGuardForm(
                 uiState = uiState,
@@ -120,13 +121,13 @@ fun SecurityGuardScreen(navController: NavController) {
 }
 
 @Composable
-private fun PhotoSelect(
+private fun PhotoSection(
     uiState: SecurityGuardScreenData,
-    launcher: ManagedActivityResultLauncher<String, Boolean>,
+    launcher: ManagedActivityResultLauncher<String, Boolean>
 ) {
     Image(
         bitmap = if (uiState.pictureBitmap != null) {
-            uiState.pictureBitmap.asImageBitmap()
+            uiState.pictureBitmap!!.asImageBitmap()
         } else {
             getBitmapFromVectorDrawable(
                 LocalContext.current, R.drawable.outline_person_24
@@ -136,7 +137,7 @@ private fun PhotoSelect(
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .clickable {
-                launcher.launch(android.Manifest.permission.CAMERA)
+                launcher.launch(Manifest.permission.CAMERA)
             }
             .size(200.dp)
             .border(
@@ -149,8 +150,6 @@ private fun PhotoSelect(
             .clip(RoundedCornerShape(16.dp))
     )
 }
-
-
 
 
 @Composable

@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.apartmentsecurity.ui.authentication.adminauthentication.adminsignin.AdminSigninEvent
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
 import com.example.apartmentsecurity.ui.authentication.component.SingleInputSection
@@ -96,13 +97,40 @@ private fun SecuritySignInForm(
     Column {
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
+            value = uiState.apartmentId,
+            onValueChange = { onEvent(SecuritySigninEvent.OnApartmentIdChange(it)) },
+            supportingText = "Apartment Id",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.apartmentName,
+            onValueChange = { onEvent(SecuritySigninEvent.OnApartmentNameChange(it)) },
+            supportingText = "Apartment Name",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.userName,
+            onValueChange = { onEvent(SecuritySigninEvent.OnUserNameChange(it)) },
+            supportingText = "User Name",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
             value = uiState.email,
             onValueChange = { onEvent(SecuritySigninEvent.OnEmailChange(it)) },
             supportingText = "Email",
             shape = RectangleShape,
             isError = false
         )
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         PasswordSection(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.password,

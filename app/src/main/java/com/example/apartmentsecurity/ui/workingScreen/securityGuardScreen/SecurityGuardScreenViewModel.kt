@@ -1,7 +1,6 @@
 package com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apartmentsecurity.MySharedPreferenceDataStore
@@ -14,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -79,6 +77,25 @@ class SecurityGuardScreenViewModel @Inject constructor(
                 SnackBarController.sendEvent(SnackBarEvent(message = "Something went ${e.message}"))
             }
         }
+    }
+
+    private fun checkFormIsNotEmpty(): Boolean {
+        viewModelScope.launch {
+            if (state.value.name.isEmpty()) {
+                SnackBarController.sendEvent(SnackBarEvent(message = "Name is Empty"))
+                return@launch
+            } else if (state.value.phoneNumber.isEmpty()) {
+                SnackBarController.sendEvent(SnackBarEvent(message = "Phone Number is Empty"))
+                return@launch
+            } else if (state.value.vehicleNumber.isEmpty()) {
+                SnackBarController.sendEvent(SnackBarEvent(message = "Vehicle Number is Empty"))
+                return@launch
+            } else if (state.value.roomNumber.isEmpty()) {
+                SnackBarController.sendEvent(SnackBarEvent(message = "Room Number is Empty"))
+                return@launch
+            }
+        }
+        return false
     }
 
 

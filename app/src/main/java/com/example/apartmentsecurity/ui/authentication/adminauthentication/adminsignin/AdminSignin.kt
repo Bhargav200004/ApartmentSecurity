@@ -96,6 +96,34 @@ private fun AdminSignInForm(
     onEvent: KFunction1<AdminSigninEvent, Unit>,
     ) {
     Column {
+
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.apartmentId,
+            onValueChange = { onEvent(AdminSigninEvent.OnApartmentIdChange(it)) },
+            supportingText = "Apartment Id",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.apartmentName,
+            onValueChange = { onEvent(AdminSigninEvent.OnApartmentNameChange(it)) },
+            supportingText = "Apartment Name",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        SingleInputSection(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.userName,
+            onValueChange = { onEvent(AdminSigninEvent.OnUserNameChange(it)) },
+            supportingText = "Apartment Name",
+            shape = RectangleShape,
+            isError = false
+        )
+        Spacer(modifier = Modifier.height(20.dp))
         SingleInputSection(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.email,
@@ -104,7 +132,7 @@ private fun AdminSignInForm(
             shape = RectangleShape,
             isError = false
         )
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         PasswordSection(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.password,

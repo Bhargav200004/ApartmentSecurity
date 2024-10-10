@@ -6,7 +6,6 @@ import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.domain.model.VisitorData
-import com.example.apartmentsecurity.util.FirebaseUtils
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_DATA
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_HOUSE_NO
 import com.example.apartmentsecurity.util.FirebaseUtils.SECURITY_GUARD
@@ -56,6 +55,8 @@ class FirebaseFireStoreImpl @Inject constructor(
         visitorData: VisitorData
     ) {
 //        val docRef = db.collection("/Raj100/Raj/ApartmentData")
+//        /Raj100/Raj/ApartmentData/20241007032452
+//        ApartmentData
         val apartmentData = db.collection(apartmentId).document(apartmentName).collection(APARTMENT_DATA).document(timeStampId)
         apartmentData.set(visitorData).await()
 
