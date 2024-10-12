@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Call
@@ -98,11 +101,13 @@ fun SecurityGuardScreen(navController: NavController) {
             }
         )
 
+        val scroll = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .padding(paddingValues = paddingValues)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .verticalScroll(state = scroll),
             verticalArrangement = Arrangement.spacedBy(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -127,7 +132,7 @@ private fun PhotoSection(
 ) {
     Image(
         bitmap = if (uiState.pictureBitmap != null) {
-            uiState.pictureBitmap!!.asImageBitmap()
+            uiState.pictureBitmap.asImageBitmap()
         } else {
             getBitmapFromVectorDrawable(
                 LocalContext.current, R.drawable.outline_person_24

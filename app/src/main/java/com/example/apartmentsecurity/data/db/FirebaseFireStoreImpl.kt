@@ -16,6 +16,7 @@ import javax.inject.Inject
 class FirebaseFireStoreImpl @Inject constructor(
     private val db: FirebaseFirestore
 ): FireStore {
+
     override suspend fun createAdmin(
         collection: String ,
         document : String ,

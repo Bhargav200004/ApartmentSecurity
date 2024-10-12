@@ -12,6 +12,7 @@ data class SecurityGuardScreenData(
     val apartmentName : String = "",
     val apartmentId : String = "",
     val pictureBitmap: Bitmap? = null,
+    val photo : String = "",
     val reasonList : List<String> = getListOfReason(),
     val showModalBottomSheet : Boolean = false,
     val showDialog : Boolean = false,

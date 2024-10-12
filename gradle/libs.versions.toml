@@ -52,6 +52,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-material-icons-extended = {  group = "androidx.compose.material", name = "material-icons-extended"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 constraintlayout = { group = "androidx.constraintlayout" , name = "constraintlayout-compose" , version.ref = "constrainVersion"}
+firebase-storage = { group = "com.google.firebase" , name = "firebase-storage"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -63,4 +64,4 @@ google-service = {id = "com.google.gms.google-services" , version.ref = "googleS
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
-firebase = [ "firebase-analytics" , "firebase-auth" , 'firebase-firestore']
+firebase = [ "firebase-analytics" , "firebase-auth" , 'firebase-firestore' , 'firebase-storage' ]

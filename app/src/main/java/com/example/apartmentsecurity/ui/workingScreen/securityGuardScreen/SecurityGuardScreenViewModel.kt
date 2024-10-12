@@ -1,15 +1,20 @@
 package com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen
 
 import android.graphics.Bitmap
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
+import com.example.apartmentsecurity.domain.model.FireStorage
 import com.example.apartmentsecurity.domain.model.VisitorData
 import com.example.apartmentsecurity.util.FirebaseUtils.getCurrentTimeStamp
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
+import com.example.apartmentsecurity.util.await
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SecurityGuardScreenViewModel @Inject constructor(
     private val fireStore: FireStore,
+    private val firebaseStorage: FireStorage,
     private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
@@ -35,7 +41,6 @@ class SecurityGuardScreenViewModel @Inject constructor(
     init {
         getApartmentData()
     }
-
 
     fun onEvent(event: SecurityGuardScreenEvent) {
         when(event){
@@ -58,8 +63,15 @@ class SecurityGuardScreenViewModel @Inject constructor(
     private fun onSubmitButtonClick() {
         viewModelScope.launch {
             try{
+//                if (checkFormIsNotEmpty()) return@launch
+                onSendImageDataToStorage()
+                delay(2000)
                 val visitorData = VisitorData(
-                    photo = "",
+                    photo = firebaseStorage.onReceiveVisitorImageFromStorage(
+                        apartmentId = state.value.apartmentId,
+                        visitorName = state.value.name,
+                        apartmentName = state.value.apartmentName
+                    ),
                     name = state.value.name,
                     roomNo = state.value.roomNumber,
                     phoneNumber = state.value.phoneNumber,
@@ -72,7 +84,24 @@ class SecurityGuardScreenViewModel @Inject constructor(
                     timeStampId = getCurrentTimeStamp(),
                     visitorData = visitorData
                 )
+
+                resetState()
                 SnackBarController.sendEvent(SnackBarEvent(message = "Successfully send"))
+            }catch (e : Exception){
+                SnackBarController.sendEvent(SnackBarEvent(message = "Something went ${e.message}"))
+            }
+        }
+    }
+
+    private fun onSendImageDataToStorage() {
+        viewModelScope.launch {
+            try {
+                firebaseStorage.onSendVisitorImageToStorage(
+                    apartmentId = state.value.apartmentId,
+                    visitorName = state.value.name,
+                    image = state.value.pictureBitmap!!,
+                    apartmentName = state.value.apartmentName
+                )
             }catch (e : Exception){
                 SnackBarController.sendEvent(SnackBarEvent(message = "Something went ${e.message}"))
             }
@@ -250,6 +279,10 @@ class SecurityGuardScreenViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun resetState(){
+        _state.value = SecurityGuardScreenData()
     }
 
 }

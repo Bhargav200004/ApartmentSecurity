@@ -119,7 +119,7 @@ private fun AdminSignInForm(
             modifier = Modifier.fillMaxWidth(),
             value = uiState.userName,
             onValueChange = { onEvent(AdminSigninEvent.OnUserNameChange(it)) },
-            supportingText = "Apartment Name",
+            supportingText = "User Name",
             shape = RectangleShape,
             isError = false
         )
