@@ -84,8 +84,8 @@ class MainActivity : ComponentActivity() {
                     ) {
 
 //                        MainScreen()
-                        AppNavigation()
-//                        UserScreen()
+//                        AppNavigation()
+                        UserScreen()
 
 //                        SecurityGuardScreen()
 
