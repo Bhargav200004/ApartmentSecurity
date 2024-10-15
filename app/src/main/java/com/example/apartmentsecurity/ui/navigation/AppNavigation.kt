@@ -14,6 +14,7 @@ import com.example.apartmentsecurity.ui.authentication.securityGuardAuthenticati
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignin.UserSignin
 import com.example.apartmentsecurity.ui.authentication.userauthentication.usersignup.UserSignup
 import com.example.apartmentsecurity.ui.workingScreen.securityGuardScreen.SecurityGuardScreen
+import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreen
 
 
 @Composable
@@ -48,7 +49,7 @@ fun AppNavigation() {
                 UserSignin(navController = navHostController)
             }
             composable<UserScreen.User> {
-                Text("User Screen")
+                UserScreen()
             }
         }
 

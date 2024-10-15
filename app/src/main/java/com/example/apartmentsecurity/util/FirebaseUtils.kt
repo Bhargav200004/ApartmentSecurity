@@ -1,8 +1,13 @@
 package com.example.apartmentsecurity.util
 
 import com.google.android.gms.tasks.Task
-import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -22,6 +27,21 @@ suspend fun <T> Task<T>.await(): T {
             }
         }
     }
+}
+
+
+fun Query.snapshotFlow(): Flow<QuerySnapshot> = callbackFlow {
+    val listenerRegistration: ListenerRegistration = addSnapshotListener { snapshot, exception ->
+        if (exception != null) {
+            // Close the flow if there's an error
+            close(exception)
+        } else if (snapshot != null) {
+            // Emit the new snapshot
+            trySend(snapshot).isSuccess
+        }
+    }
+
+    awaitClose { listenerRegistration.remove() }
 }
 
 object FirebaseUtils {

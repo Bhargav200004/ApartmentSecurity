@@ -6,11 +6,13 @@ import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.domain.model.VisitorData
+import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreenModel
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_DATA
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_HOUSE_NO
 import com.example.apartmentsecurity.util.FirebaseUtils.SECURITY_GUARD
 import com.example.apartmentsecurity.util.await
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FirebaseFireStoreImpl @Inject constructor(
@@ -58,9 +60,30 @@ class FirebaseFireStoreImpl @Inject constructor(
 //        val docRef = db.collection("/Raj100/Raj/ApartmentData")
 //        /Raj100/Raj/ApartmentData/20241007032452
 //        ApartmentData
-        val apartmentData = db.collection(apartmentId).document(apartmentName).collection(APARTMENT_DATA).document(timeStampId)
+        val apartmentData = db.collection(apartmentId).document(apartmentName).collection(APARTMENT_DATA) .document(timeStampId)
         apartmentData.set(visitorData).await()
+    }
 
+    override fun getUserData(roomNo: String): Flow<List<UserScreenModel>> {
+
+//        var data : List<UserScreenData>
+//
+//        db.collection("cities")
+//            .document("SF")
+//            .collection("landmarks")
+//            .get()
+//            .addOnSuccessListener { result ->
+//                data = result
+//                for (document in result) {
+//
+////                    Log.d(TAG, "${document.id} => ${document.data}")
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+////                Log.d(TAG, "Error getting documents: ", exception)
+//            }
+
+        TODO()
     }
 
 }

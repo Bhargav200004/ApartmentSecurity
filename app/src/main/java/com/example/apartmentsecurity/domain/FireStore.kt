@@ -4,7 +4,8 @@ import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.domain.model.VisitorData
-import com.google.firebase.firestore.QuerySnapshot
+import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreenModel
+import kotlinx.coroutines.flow.Flow
 
 interface FireStore {
 
@@ -15,5 +16,10 @@ interface FireStore {
     suspend fun createSecurity(collection : String, document : String ,securityUserName: String ,securityData: SecurityData)
 
     suspend fun sendVisitorData(apartmentId: String,apartmentName: String,timeStampId : String,visitorData: VisitorData)
+
+    fun getUserData(roomNo : String) : Flow<List<UserScreenModel>>
 }
+
+
+
 

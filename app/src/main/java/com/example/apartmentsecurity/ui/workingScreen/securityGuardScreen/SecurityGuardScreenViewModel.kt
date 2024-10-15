@@ -64,14 +64,24 @@ class SecurityGuardScreenViewModel @Inject constructor(
         viewModelScope.launch {
             try{
 //                if (checkFormIsNotEmpty()) return@launch
-                onSendImageDataToStorage()
-                delay(2000)
-                val visitorData = VisitorData(
-                    photo = firebaseStorage.onReceiveVisitorImageFromStorage(
+                if(state.value.pictureBitmap != null){
+                    onSendImageDataToStorage()
+                }
+
+
+
+
+                val image: String = if (state.value.pictureBitmap != null) {
+                    delay(2000)
+                    firebaseStorage.onReceiveVisitorImageFromStorage(
                         apartmentId = state.value.apartmentId,
                         visitorName = state.value.name,
                         apartmentName = state.value.apartmentName
-                    ),
+                    )
+                }else ""
+
+                val visitorData = VisitorData(
+                    photo = image,
                     name = state.value.name,
                     roomNo = state.value.roomNumber,
                     phoneNumber = state.value.phoneNumber,
@@ -215,10 +225,13 @@ class SecurityGuardScreenViewModel @Inject constructor(
 
     private fun onPictureChange(picture: Bitmap?) {
         viewModelScope.launch {
-            _state.update { state ->
-                state.copy(
-                    pictureBitmap = picture
-                )
+            if (picture != null){
+                _state.update { state ->
+                    state.copy(
+                        pictureBitmap = picture
+                    )
+                }
+
             }
         }
     }

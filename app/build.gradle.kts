@@ -1,4 +1,4 @@
-plugins {
+ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
@@ -98,7 +98,11 @@ dependencies {
     implementation(libs.constraintlayout)
 
     //DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.androidx.datastore.preferences)
+
+
+    //Coil Image processing
+    implementation(libs.coil.compose)
 
 
 
