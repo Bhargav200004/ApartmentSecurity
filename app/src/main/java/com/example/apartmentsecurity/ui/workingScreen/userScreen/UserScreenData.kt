@@ -1,8 +1,8 @@
 package com.example.apartmentsecurity.ui.workingScreen.userScreen
 
-import com.example.apartmentsecurity.domain.model.UserScreenModel
+import com.example.apartmentsecurity.domain.model.UserDataModel
 
 data class UserScreenData (
-    val data : List<UserScreenModel> = emptyList(),
+    val data : List<UserDataModel> = emptyList(),
     val roomNumber : String = ""
 )

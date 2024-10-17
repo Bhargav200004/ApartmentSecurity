@@ -1,4 +1,4 @@
-package com.example.apartmentsecurity.ui.workingScreen.userScreen
+package com.example.apartmentsecurity.ui.workingScreen.adminScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,27 +32,27 @@ import com.example.apartmentsecurity.ui.navigation.AppScreen
 import com.example.apartmentsecurity.ui.workingScreen.component.VisitorInformationCard
 
 @Composable
-fun UserScreen(navController: NavController) {
+fun AdminScreen(navController: NavController) {
 
-    val viewModel : UserScreenViewModel = hiltViewModel()
+    val viewModel: AdminScreenViewModel = hiltViewModel()
 
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
 
     Scaffold(
         topBar = {
-            UserScreenTopBar(
+            AdminScreenTopBar(
                 onBackButtonClick = {
                     navController.popBackStack(route = AppScreen.MainScreen , inclusive = false)
                 }
             )
         }
-    ) {paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            LazyColumn (
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues = paddingValues)
@@ -60,32 +60,32 @@ fun UserScreen(navController: NavController) {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
-            ){
+            ) {
 
-                if(uiState.data.isEmpty()){
-                    item{
+                if (uiState.data.isEmpty()) {
+                    item {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(300.dp),
                             contentAlignment = Alignment.Center
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(id = R.drawable.emptydata),
                                 contentDescription = null
                             )
                         }
                     }
-                }else{
-                    items(uiState.data){userData ->
-                        if (userData.name != ""){
+                } else {
+                    items(uiState.data) {
+                        if (it.name != "") {
                             VisitorInformationCard(
-                                name = userData.name,
-                                reason = userData.reason,
-                                phoneNumber = userData.phoneNumber,
-                                photo = userData.photo,
-                                date = userData.date,
-                                time = userData.time
+                                name = it.name,
+                                reason = it.reason,
+                                phoneNumber = it.phoneNumber,
+                                photo = it.photo,
+                                date = it.date,
+                                time = it.time
                             )
                         }
                     }
@@ -94,19 +94,18 @@ fun UserScreen(navController: NavController) {
             }
         }
     }
+
 }
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UserScreenTopBar(
-    onBackButtonClick : () -> Unit
+private fun AdminScreenTopBar(
+    onBackButtonClick: () -> Unit
 ) {
     TopAppBar(
         title = {
-            Text(text = "User Screen")
+            Text(text = "Admin Screen")
         },
         navigationIcon = {
             IconButton(

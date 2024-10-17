@@ -1,6 +1,6 @@
 package com.example.apartmentsecurity.domain.model
 
-data class UserScreenModel(
+data class UserDataModel(
     val name: String,
     val reason: String,
     val phoneNumber: String,
