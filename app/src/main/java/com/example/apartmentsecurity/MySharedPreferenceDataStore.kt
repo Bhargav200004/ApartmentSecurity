@@ -88,6 +88,12 @@ class MySharedPreferenceDataStore @Inject constructor(
         }.first()
     }
 
+    suspend fun getRoomNumber(): String? {
+        return preferenceDataFlow.map {
+            it.roomNumber
+        }.first()
+    }
+
     suspend fun onSend(name: String , apartmentId: String , apartmentName: String){
             myPreferenceDataStore.edit {
                 it[PreferenceKeys.NAME] = name

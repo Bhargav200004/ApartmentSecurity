@@ -103,6 +103,7 @@ dependencies {
 
     //Coil Image processing
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
 
 

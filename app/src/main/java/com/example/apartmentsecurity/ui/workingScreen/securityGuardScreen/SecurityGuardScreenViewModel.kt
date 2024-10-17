@@ -80,18 +80,20 @@ class SecurityGuardScreenViewModel @Inject constructor(
                     )
                 }else ""
 
+                val currentTimeAndData = getCurrentTimeStamp()
                 val visitorData = VisitorData(
                     photo = image,
                     name = state.value.name,
                     roomNo = state.value.roomNumber,
                     phoneNumber = state.value.phoneNumber,
                     vehicleNumber = state.value.vehicleNumber,
-                    reason = state.value.reason
+                    reason = state.value.reason,
+                    dateTime = currentTimeAndData
                 )
                 fireStore.sendVisitorData(
                     apartmentId = state.value.apartmentId,
                     apartmentName = state.value.apartmentName,
-                    timeStampId = getCurrentTimeStamp(),
+                    timeStampId = currentTimeAndData,
                     visitorData = visitorData
                 )
 
@@ -295,7 +297,18 @@ class SecurityGuardScreenViewModel @Inject constructor(
     }
 
     private fun resetState(){
-        _state.value = SecurityGuardScreenData()
+        viewModelScope.launch {
+            _state.update {state ->
+                state.copy(
+                    pictureBitmap = null,
+                    photo = "",
+                    name = "",
+                    phoneNumber = "",
+                    vehicleNumber = "",
+                    roomNumber = "",
+                    reason = SecurityGuardScreenData.Companion.Reason.DELIVERY.value,
+                )
+            }
+        }
     }
-
 }

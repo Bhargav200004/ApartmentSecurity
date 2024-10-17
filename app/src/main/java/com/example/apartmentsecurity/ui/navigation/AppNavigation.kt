@@ -49,7 +49,7 @@ fun AppNavigation() {
                 UserSignin(navController = navHostController)
             }
             composable<UserScreen.User> {
-                UserScreen()
+                UserScreen(navController = navHostController)
             }
         }
 

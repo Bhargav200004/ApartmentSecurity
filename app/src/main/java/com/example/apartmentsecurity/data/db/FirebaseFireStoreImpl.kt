@@ -5,14 +5,17 @@ import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
+import com.example.apartmentsecurity.domain.model.UserScreenModel
 import com.example.apartmentsecurity.domain.model.VisitorData
-import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreenModel
+import com.example.apartmentsecurity.ui.workingScreen.userScreen.toModelData
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_DATA
 import com.example.apartmentsecurity.util.FirebaseUtils.APARTMENT_HOUSE_NO
 import com.example.apartmentsecurity.util.FirebaseUtils.SECURITY_GUARD
 import com.example.apartmentsecurity.util.await
+import com.example.apartmentsecurity.util.snapshotFlow
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class FirebaseFireStoreImpl @Inject constructor(
@@ -64,26 +67,15 @@ class FirebaseFireStoreImpl @Inject constructor(
         apartmentData.set(visitorData).await()
     }
 
-    override fun getUserData(roomNo: String): Flow<List<UserScreenModel>> {
+    override fun getRoomUserData(roomNumber: String): Flow<List<UserScreenModel>>{
+        // Listen for real-time updates with addSnapshotListener
+        return db.collection("/Raj100/Raj/ApartmentData")
+            .whereEqualTo("roomNo", roomNumber) // Uncomment if filtering by room number is needed
+            .snapshotFlow()
+            .map { snapshot->
+                snapshot.documents.toModelData()
+            }
 
-//        var data : List<UserScreenData>
-//
-//        db.collection("cities")
-//            .document("SF")
-//            .collection("landmarks")
-//            .get()
-//            .addOnSuccessListener { result ->
-//                data = result
-//                for (document in result) {
-//
-////                    Log.d(TAG, "${document.id} => ${document.data}")
-//                }
-//            }
-//            .addOnFailureListener { exception ->
-////                Log.d(TAG, "Error getting documents: ", exception)
-//            }
-
-        TODO()
     }
 
 }

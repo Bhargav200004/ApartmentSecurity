@@ -3,8 +3,8 @@ package com.example.apartmentsecurity.domain
 import com.example.apartmentsecurity.domain.model.AdminData
 import com.example.apartmentsecurity.domain.model.SecurityData
 import com.example.apartmentsecurity.domain.model.UserData
+import com.example.apartmentsecurity.domain.model.UserScreenModel
 import com.example.apartmentsecurity.domain.model.VisitorData
-import com.example.apartmentsecurity.ui.workingScreen.userScreen.UserScreenModel
 import kotlinx.coroutines.flow.Flow
 
 interface FireStore {
@@ -17,7 +17,7 @@ interface FireStore {
 
     suspend fun sendVisitorData(apartmentId: String,apartmentName: String,timeStampId : String,visitorData: VisitorData)
 
-    fun getUserData(roomNo : String) : Flow<List<UserScreenModel>>
+    fun getRoomUserData(roomNumber : String) : Flow<List<UserScreenModel>>
 }
 
 

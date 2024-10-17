@@ -6,5 +6,6 @@ data class VisitorData(
     val roomNo : String,
     val phoneNumber : String,
     val vehicleNumber : String,
-    val reason : String
+    val reason : String,
+    val dateTime : String
 )
