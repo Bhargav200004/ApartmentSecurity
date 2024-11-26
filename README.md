@@ -19,3 +19,13 @@ A modern Android application designed to enhance apartment security by enabling 
    ```bash
    git clone https://github.com/Bhargav200004/ApartmentSecurity.git
 
+2. Open in Android Studio.
+3. Configure Firebase:
+   - Add your google-services.json to the project.
+   - Set up Firebase Authentication and Firestore.
+4. Run the app on an emulator or device.
+
+
+## 🤝 Contributing
+Contributions are welcome! Feel free to fork this repository and submit pull requests.
+
