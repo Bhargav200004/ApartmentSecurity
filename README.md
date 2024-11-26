@@ -25,6 +25,17 @@ A modern Android application designed to enhance apartment security by enabling 
    - Set up Firebase Authentication and Firestore.
 4. Run the app on an emulator or device.
 
+## 📸 Screenshots
+
+### Login Screen
+![Login Screen](screenshots/login_screen.png)
+
+### Visitor Management
+![Visitor Management](screenshots/visitor_management.png)
+
+### Real-Time Monitoring
+![Real-Time Monitoring](screenshots/real_time_monitoring.png)
+
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to fork this repository and submit pull requests.
