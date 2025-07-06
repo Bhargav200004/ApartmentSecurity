@@ -41,6 +41,9 @@ A modern Android application designed to enhance apartment security by enabling 
 |:------------------------------------------------------------------:|:-------------------------------------------------------------------:|
 | <img src="app/src/main/res/drawable/securityscreen.png" width="300"/>   |
 
+## 🎥 Demo Video
+https://github.com/user-attachments/assets/156a2cf6-e9ab-4253-a783-38117a125cb0
+
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to fork this repository and submit pull requests.
