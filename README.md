@@ -27,14 +27,19 @@ A modern Android application designed to enhance apartment security by enabling 
 
 ## 📸 Screenshots
 
-### Login Screen
-![Login Screen](screenshots/login_screen.png)
+### Admin Screen
+| <img src="app/src/main/res/drawable/adminsignup.png" width="300"/> | <img src="app/src/main/res/drawable/adminsignin.png" width="300"/> |
+|:------------------------------------------------------------------:|:-------------------------------------------------------------------:|
+| <img src="app/src/main/res/drawable/adminscreen.png" width="300"/>   |
 
-### Visitor Management
-![Visitor Management](screenshots/visitor_management.png)
+### User Screen
+| <img src="app/src/main/res/drawable/usersignup.png" width="300"/> | <img src="app/src/main/res/drawable/usersignin.png" width="300"/> |
+|:------------------------------------------------------------------:|:-------------------------------------------------------------------:|
 
-### Real-Time Monitoring
-![Real-Time Monitoring](screenshots/real_time_monitoring.png)
+### Security Screen
+| <img src="app/src/main/res/drawable/securitysignup.png" width="300"/> | <img src="app/src/main/res/drawable/signin.png" width="300"/> |
+|:------------------------------------------------------------------:|:-------------------------------------------------------------------:|
+| <img src="app/src/main/res/drawable/securityscreen.png" width="300"/>   |
 
 
 ## 🤝 Contributing
