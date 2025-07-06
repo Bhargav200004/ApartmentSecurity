@@ -23,12 +23,12 @@ class FirebaseFireStoreImpl @Inject constructor(
 ) : FireStore {
 
     override suspend fun createAdmin(
-        collection: String,
-        document: String,
+        apartmentId: String,
+        apartmentName: String,
         adminData: AdminData
     ) {
-        db.collection(collection).document(document).set(adminData).await()
-        val apartmentDataReference = db.collection(collection).document(document)
+        db.collection(apartmentId).document(apartmentName).set(adminData).await()
+        val apartmentDataReference = db.collection(apartmentId).document(apartmentName)
         apartmentDataReference.collection(SECURITY_GUARD).document("EmptyData").set("" to "")
             .await()
         apartmentDataReference.collection(APARTMENT_HOUSE_NO).document("EmptyData").set("" to "")
@@ -38,23 +38,23 @@ class FirebaseFireStoreImpl @Inject constructor(
     }
 
     override suspend fun createUser(
-        collection: String,
-        document: String,
+        apartmentId: String,
+        apartmentName: String,
         roomNo: String,
         userData: UserData
     ) {
-        val userRef = db.collection(collection).document(document).collection(APARTMENT_HOUSE_NO)
+        val userRef = db.collection(apartmentId).document(apartmentName).collection(APARTMENT_HOUSE_NO)
         userRef.document(roomNo).set(userData).await()
     }
 
     override suspend fun createSecurity(
-        collection: String,
-        document: String,
+        apartmentId: String,
+        apartmentName: String,
         securityUserName: String,
         securityData: SecurityData
     ) {
-        val userRef = db.collection(collection).document(document).collection(SECURITY_GUARD)
-        userRef.document(securityUserName).set(securityData).await()
+        val securityRef = db.collection(apartmentId).document(apartmentName).collection(SECURITY_GUARD)
+        securityRef.document(securityUserName).set(securityData).await()
     }
 
     override suspend fun sendVisitorData(
@@ -72,9 +72,9 @@ class FirebaseFireStoreImpl @Inject constructor(
         apartmentData.set(visitorData).await()
     }
 
-    override fun getRoomUserData(roomNumber: String): Flow<List<UserDataModel>> {
+    override fun getRoomUserData(apartmentId: String, apartmentName: String ,roomNumber: String): Flow<List<UserDataModel>> {
         // Listen for real-time updates with addSnapshotListener
-        return db.collection("/Raj100/Raj/ApartmentData")
+        return db.collection("/${apartmentId}/${apartmentName}/ApartmentData")
             .whereEqualTo("roomNo", roomNumber) // Uncomment if filtering by room number is needed
             .snapshotFlow()
             .map { snapshot ->
@@ -82,9 +82,9 @@ class FirebaseFireStoreImpl @Inject constructor(
             }
     }
 
-    override fun getUserData(): Flow<List<UserDataModel>> {
+    override fun getUserData(apartmentId : String , apartmentName: String ): Flow<List<UserDataModel>> {
         // Listen for real-time updates with addSnapshotListener
-        return db.collection("/Raj100/Raj/ApartmentData")
+        return db.collection("/${apartmentId}/${apartmentName}/ApartmentData")
             .snapshotFlow()
             .map { snapshot ->
                 snapshot.documents.toModelData()

@@ -104,8 +104,8 @@ class AdminSignupViewModel @Inject constructor(
                     val apartmentName = state.value.apartmentName
 //                    userUUID = state.value.user?.user?.uid!!
                     firebaseFireStore.createAdmin(
-                        collection = state.value.apartmentId,
-                        document = state.value.apartmentName,
+                        apartmentId = state.value.apartmentId,
+                        apartmentName = state.value.apartmentName,
                         adminData = adminData
                     )
                     Log.d("Checkingerror" , "user are registered number $user , $apartmentName")

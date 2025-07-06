@@ -95,8 +95,8 @@ class UserSignupViewModel @Inject constructor(
                     val user = authRepository.getUser()!!.uid
                     val apartmentName = state.value.apartmentName
                     firebaseFireStore.createUser(
-                        collection = state.value.apartmentId,
-                        document = state.value.apartmentName,
+                        apartmentId = state.value.apartmentId,
+                        apartmentName = state.value.apartmentName,
                         roomNo = state.value.roomNo,
                         userData = userData
                     )

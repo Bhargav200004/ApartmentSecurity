@@ -3,6 +3,7 @@ package com.example.apartmentsecurity.ui.workingScreen.adminScreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AdminScreenViewModel @Inject constructor(
     private val firebase : FireStore,
+    private val mySharedPreferenceDataStore: MySharedPreferenceDataStore
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AdminScreenData())
@@ -37,9 +39,12 @@ class AdminScreenViewModel @Inject constructor(
     }
 
     private fun getDataMultipleDocument() {
+
         viewModelScope.launch {
             try {
-                firebase.getUserData().collect {
+                val apartmentId = mySharedPreferenceDataStore.getApartmentId()
+                val apartmentName = mySharedPreferenceDataStore.getApartmentName()
+                firebase.getUserData(apartmentId = apartmentId , apartmentName = apartmentName).collect {
                     _state.update {state ->
                         state.copy(
                             data = it

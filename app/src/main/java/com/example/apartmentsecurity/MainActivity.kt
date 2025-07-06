@@ -82,13 +82,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(paddingValues = innerPadding)
                     ) {
-
-//                        MainScreen()
                         AppNavigation()
-//                        UserScreen()
-
-//                        SecurityGuardScreen()
-
                     }
                 }
             }

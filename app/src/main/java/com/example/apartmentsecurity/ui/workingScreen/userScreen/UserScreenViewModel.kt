@@ -47,14 +47,16 @@ class UserScreenViewModel @Inject constructor(
                 )
             }
             delay(50)
-            Log.d("RoomNumber", state.value.roomNumber)
             getRoomDataMultipleDocumentRefreshData(state.value.roomNumber)
         }
     }
 
     private fun getRoomDataMultipleDocumentRefreshData(roomNumber: String) {
         viewModelScope.launch {
-            firebase.getRoomUserData(roomNumber).collect {
+            val apartmentId = sharedPreferenceDataStore.getApartmentId()
+            val apartmentName = sharedPreferenceDataStore.getApartmentName()
+
+            firebase.getRoomUserData(apartmentId , apartmentName, roomNumber).collect {
                 _state.update { state ->
                     state.copy(
                         data = it

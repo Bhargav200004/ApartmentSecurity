@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.apartmentsecurity.ui.authentication.component.AppTopBar
 import com.example.apartmentsecurity.ui.authentication.component.PasswordSection
 import com.example.apartmentsecurity.ui.authentication.component.SingleInputSection

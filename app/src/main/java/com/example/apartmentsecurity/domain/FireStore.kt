@@ -9,17 +9,17 @@ import kotlinx.coroutines.flow.Flow
 
 interface FireStore {
 
-    suspend fun createAdmin(collection : String, document : String, adminData: AdminData )
+    suspend fun createAdmin(apartmentId : String, apartmentName : String, adminData: AdminData )
 
-    suspend fun createUser(collection : String, document : String ,roomNo: String,userData: UserData)
+    suspend fun createUser(apartmentId : String, apartmentName : String, roomNo: String, userData: UserData)
 
-    suspend fun createSecurity(collection : String, document : String ,securityUserName: String ,securityData: SecurityData)
+    suspend fun createSecurity(apartmentId : String, apartmentName : String, securityUserName: String, securityData: SecurityData)
 
     suspend fun sendVisitorData(apartmentId: String,apartmentName: String,timeStampId : String,visitorData: VisitorData)
 
-    fun getRoomUserData(roomNumber : String) : Flow<List<UserDataModel>>
+    fun getRoomUserData(apartmentId: String, apartmentName: String ,  roomNumber : String) : Flow<List<UserDataModel>>
 
-    fun getUserData(): Flow<List<UserDataModel>>
+    fun getUserData(apartmentId : String , apartmentName: String): Flow<List<UserDataModel>>
 }
 
 

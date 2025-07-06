@@ -8,7 +8,6 @@ import com.example.apartmentsecurity.MySharedPreferenceDataStore
 import com.example.apartmentsecurity.domain.FireStore
 import com.example.apartmentsecurity.domain.FirebaseAuthenticator
 import com.example.apartmentsecurity.domain.model.SecurityData
-import com.example.apartmentsecurity.domain.model.UserData
 import com.example.apartmentsecurity.util.SnackBarController
 import com.example.apartmentsecurity.util.SnackBarEvent
 import com.example.apartmentsecurity.util.ValidationResult
@@ -127,9 +126,10 @@ class SecuritySignupViewModel @Inject constructor(
                 if ( state.value.user?.user?.uid != null){
                     val user = authRepository.getUser()!!.uid
                     val apartmentName = state.value.apartmentName
+                    Log.d("SecuritySignUp" , "${state.value.apartmentId} ${state.value.apartmentName}")
                     firebaseFireStore.createSecurity(
-                        collection = state.value.apartmentId,
-                        document = state.value.apartmentName,
+                        apartmentId = state.value.apartmentId,
+                        apartmentName = state.value.apartmentName,
                         securityUserName = state.value.userName,
                         securityData = securityData
                     )
